@@ -1,0 +1,17 @@
+23:01:15 **** Incremental Build of configuration Release for project database ****
+make all 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./storage.o   
+./storage.o: In function `StorageManagement::StorageManagement()':
+storage.cpp:(.text+0x40): undefined reference to `BufferTableItem::BufferTableItem()'
+storage.cpp:(.text+0x5b): undefined reference to `Frame::Frame()'
+./storage.o: In function `StorageManagement::ReadBuffer(unsigned long, void*, unsigned int)':
+storage.cpp:(.text+0xbcf): undefined reference to `StorageManagement::LoadPage(unsigned long, void*, unsigned int)'
+./storage.o: In function `StorageManagement::FlushBuffer()':
+storage.cpp:(.text+0x10d9): undefined reference to `StorageManagement::WriteFile(unsigned long, void const*, unsigned int)'
+collect2: error: ld returned 1 exit status
+make: *** [database] Error 1
+
+23:01:16 Build Finished (took 127ms)
+

@@ -1,0 +1,5 @@
+00:15:43 **** Build of configuration Default for project postgresql ****
+make all 
+You need to run the 'configure' program first. See the file
+'INSTALL' for installation instructions.
+make: *** [all] Error 1
