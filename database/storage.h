@@ -44,16 +44,18 @@ public:
 	 * relate to offset in file
 	 */
 	ADDR frame_id;
-	bool is_valid;
+	bool is_modified;
+	bool is_used;
 	/*
 	 * when load or write page, store content.
 	 */
 	unsigned char  frame_content[PAGE_SIZE];
 
-	Frame(ADDR id, bool is_valid)
+	Frame(ADDR id, bool is_modified, bool is_used)
 	{
-		this->is_valid = is_valid;
+		this->is_modified = is_modified;
 		this->frame_id = id;
+		this->is_used = is_used;
 		this->frame_content = NULL; //? pointer
 	}
 	/*
@@ -64,43 +66,53 @@ public:
 	/*
 	 * flush PAGE_SIZE to file fd
 	 */
-	int FlushFrame(const void *buf, int fd);
+	int FlushFrame(const void* buf,int fd);
 };
 
 class FrameTable{
 public:
 	Frame *frame_table;
-	Frame *free_frame_list;
+	ADDR *free_frame_list;
 	/*
 	 * count frames
 	 */
 	unsigned int count;
-	FrameTable(){
-		this->frame_table = NULL;
-		this->free_frame_list  = NULL;
-		this->count = 0;
-	}
 	/*
 	 * assign a free frame, add it to frame_table
 	 * return a free frame_id
 	 */
 	ADDR AllocFrame();
+	ADDR* AllocFrames(unsigned int nframes);
+	void CountInc(){
+		this->count++;
+	}
+	FrameTable(){
+			this->frame_table = NULL;
+			this->free_frame_list  = -1;
+			this->count = 0;
+		}
 };
 
 class Page {
 public:
 	ADDR page_id;
-	bool is_valid;
+	bool is_modified;
+	bool is_used;
+	void *content;
 	unsigned int free_tuples;//bit map
 	//Frame frame;
 	Page(){
 		this->page_id = 0;
-		this->is_valid = true;
+		this->is_modified = true;
+		this->is_used = true;
 		this->free_tuples = 0;
+		this->content = NULL;
 	}
-	Page(ADDR page_id,bool is_valid){
+	Page(ADDR page_id,bool is_modified,bool is_used){
 		this->page_id = page_id;
-		this->is_valid = is_valid;
+		this->is_modified = is_modified;
+		this->is_used = is_used;
+		this->content = NULL;
 		this->free_tuples = 0;
 	}
 };
@@ -134,11 +146,41 @@ public:
 	 * return page_id;
 	 */
 	ADDR AllocPage();
+	ADDR* AllocPages(unsigned int npages);
+	void CountInc(){
+		this->count++;
+	}
 
 	int SetFreePage(unsigned int page_id);
 	unsigned int GetFreePage();
 };
 
+/*
+ * record virtual base address
+ */
+class AddressSpace{
+	ADDR current_seg;
+	ADDR current_addr;
+public:
+	AddressSpace(ADDR current_addr){
+		this->current_addr = current_addr;
+		this->current_seg = current_addr >> 28;
+	}
+	ADDR GetCurrentAddr(){
+		//this->current_addr = this->current_seg << 28;
+		return this->current_addr;
+	}
+	ADDR GetCurrentSeg(){
+		this->current_seg = this->current_addr >> 28;
+		return this->current_seg;
+	}
+	void ADDRInc(){
+		this->current_addr++;
+	}
+	void SetBaseAddr(ADDR current_addr){
+		this->current_addr = current_addr;
+	}
+};
 /*
  * organize segments array;
  */
@@ -158,6 +200,10 @@ public:
 	/*
 	 * add one seg
 	 */
+	int Add_Seg(Segment seg);
+	/*
+	 * delete seg
+	 */
 };
 
 class BufferTableItem {
@@ -176,39 +222,47 @@ public:
 
 class StorageManagement {
 private:
+	/*
+	 * buffer management
+	 */
 	int last_used; //置换策略中上一次访问的位置
-
 	void InitBufferTable();
 	int HitBuffer(ADDR virtual_addr);
 	BufferTableItem* NRU(BufferTableItem* buffer_table);
 
-/*
- * parse address
- */
+	/*
+	 * address management
+	 */
+	SegmentTable segment_table; //user define the number of segs, 1 seg by default
+	FrameTable frame_table;
+	AddressSpace addr_space = AddressSpace(0);
+
+	/*
+	 * parse address
+	 */
 	ADDR GetPageId(ADDR virtual_addr);
 	ADDR GetSegId(ADDR virtual_addr);
 	ADDR GetOffset(ADDR virtual_addr);
+	/*
+	 * Given address, load & write page
+	 */
+	int LoadPage(ADDR virtual_addr, void *buf);
+	//int loadPages(ADDR virtual_addr, unsigned int npage);
+	int WritePage(ADDR virtual_addr,const void *buf, unsigned int length);
+	//int WriteFile(ADDR virtual_addr, const void *buf, unsigned int length);//virtual_addr <- alloc
 
-	int LoadPage(ADDR virtual_addr, void *buf); //read a page into buf
-
-	Page* AllocPage();
-
-	int Write(const void *buf, unsigned int length);
-
-	int WriteFile(ADDR virtual_addr, const void *buf, unsigned int length);//virtual_addr <- alloc
-	int WriteOnePage(ADDR virtual_addr,const void *buf, unsigned int length);
 public:
 	int fd; //for file operations
 	BufferTableItem  buffer_table[BUFFER_SIZE];
 	Frame buffer[BUFFER_SIZE];
-	SegmentTable segment_table; //user define the number of segs, 1 seg by default
-	FrameTable frame_table;
+
 
 	StorageManagement();
 	~StorageManagement();
 
 	void InitStorage(char *path);
 	int ReadBuffer(ADDR virtual_addr, void *buf, unsigned int length);
+	int Write(const void *buf, unsigned int length);
 	int WriteBuffer(ADDR virtual_addr, const void *buf, unsigned int length);
 	void FlushBuffer();
 };

@@ -119,6 +119,7 @@ int StorageManagement::ReadBuffer(ADDR virtual_addr, void *buf, unsigned int len
 	}
 }
 
+
 int StorageManagement::WriteBuffer(ADDR virtual_addr, const void *buf, unsigned int length) {
 	int index = this->HitBuffer(virtual_addr);
 	BufferTableItem* item = NULL;
@@ -141,6 +142,33 @@ int StorageManagement::WriteBuffer(ADDR virtual_addr, const void *buf, unsigned 
 	}
 }
 
+/*
+ * write *buf to buffer
+ *
+ */
+int StorageManagement::Write(const void *buf, unsigned int length){
+	/*
+	 * Allocate pages;
+	 */
+	ADDR current_seg = this->addr_space.current_seg;
+	ADDR current_addr = this->addr_space.current_addr;
+	Segment seg = this->segment_table.seg_table[current_seg];
+	int npages = length/PAGE_SIZE + 1;
+	ADDR tmp_new_page_id;
+	for(int i = 0; i < npages; i++){
+		tmp_new_page_id = seg.AllocPage();
+		seg.page_table[tmp_new_page_id].content = buf + i*PAGE_SIZE;
+		seg.page_table[tmp_new_page_id].is_used = true;
+		this->addr_space.ADDRInc();
+	}
+
+	/*to be continued:
+	 * 		write to buffer
+	 *			add into buffer_table
+	 */
+	return 1;
+}
+
 void StorageManagement::FlushBuffer() {
 	for (int i = 0; i < BUFFER_SIZE; i++) {
 		if (this->buffer_table[i].is_written == true) {
@@ -150,6 +178,13 @@ void StorageManagement::FlushBuffer() {
 	}
 }
 
+
+
+
+
+/*
+ * seg-page related functions
+ */
 ADDR StorageManagement::GetSegId(ADDR virtual_addr){
 	ADDR seg_id;
 	seg_id = (virtual_addr >> (PAGE_BIT + OFFSET_BIT)) & SEG_MASK;
@@ -166,9 +201,14 @@ ADDR StorageManagement::GetOffset(ADDR virtual_addr){
 	return offset;
 }
 
+/*
+ * Given fd and frame.id, read frame content from file
+ * to be continued:
+ * 	See if it's possible to pass a *buff instead of writing into frame_content
+ */
 void* Frame::GetFrameContent(int fd){
 	off_t offset = this->frame_id * PAGE_SIZE;
-	if (this->is_valid == false){
+	if (this->is_modified == false){
 		printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
 		return NULL;
 	}
@@ -179,15 +219,32 @@ void* Frame::GetFrameContent(int fd){
 	return NULL; //lseek failed.
 }
 
+/*
+ * new a frame, insert into frametable  and return a free frame_id.
+ * !!!To be continued:
+ * 					when frames count exceeds a max number, return from freelist
+ */
 ADDR FrameTable::AllocFrame(){
 	unsigned int count = this->count;
-	Frame new_frame = Frame(count,true);
+	Frame new_frame = Frame(count,true,true);
 	this->frame_table[count] = new_frame;
-	count++;
+	this->CountInc();
 	return new_frame.frame_id;
 }
+ADDR* FrameTable::AllocFrames(unsigned int nframes){
+	unsigned int i = 0;
+	ADDR *addr;
+	for(i = 0;i<nframes;i++){
+		addr[i]=this->AllocFrame();
+	}
+	return addr;
+}
 
-int Frame::FlushFrame(const void *buf, int fd){
+/*
+ * write frame content into file related offset
+ * not write into frame.content
+ */
+int Frame::FlushFrame(const void *buf,int fd){
 	off_t offset = this->frame_id * PAGE_SIZE;
 	if(lseek(fd,offset,SEEK_SET) != -1){
 		write(fd,buf,PAGE_SIZE);
@@ -195,17 +252,32 @@ int Frame::FlushFrame(const void *buf, int fd){
 	}
 	return -1;
 }
+
+/*
+ * add a page in a given seg
+ * return page_id
+ */
 ADDR Segment::AllocPage(){
-	unsigned int count = this->count;
-	Page new_page = Page(count,true);
-	this->page_table[count] = new_page;
-	count++;
+	/*
+	 * insert a new page into page_table
+	 */
+	Page new_page = Page(count,true,true);
+	this->page_table[this->count] = new_page;
+	this->CountInc();
 	return new_page.page_id;
 }
+ADDR* Segment::AllocPages(unsigned int npages){
+	unsigned int *addr;
+	for(unsigned int i = 0; i < npages; i++){
+		addr[i] = this->AllocPage();
+	}
+	return addr;
+}
 /*
- *1. Get seg_id, look up segment table to get start address of the segment
- *2. Get page_id
- *2.
+ * given virtual_addr, load page content into buf
+ * first, parse it into seg_id,page_id
+ * get seg start_id and addr_map in segment table.
+ * find frame_id in addr_map.
  */
 int StorageManagement::LoadPage(ADDR virtual_addr, void *buf){
 	ADDR seg_id = this->GetSegId(virtual_addr);
@@ -220,35 +292,23 @@ int StorageManagement::LoadPage(ADDR virtual_addr, void *buf){
 	if(iter != addr_map.end())
 	{
 		Frame frame = this->frame_table.frame_table[iter->second];
-		if((buf = frame.GetFrameContent(this->fd)) != NULL)
+		if((buf = frame.GetFrameContent(this->fd)) != NULL){
 			return 0;
+		}
 		else
 			return -1;
 	}
 	printf("ERROR:cannot find page %u in map!",page_id);
 	return -1;
-
-	/*
-	off_t offset = (start_id + page_id) * PAGE_SIZE;
-	int fd = this->fd;
-	if(fd == NULL){
-		printf("ERROR, file not exists");
-		return -1;
-	}
-	if(lseek(fd,offset,SEEK_SET) != -1){
-		read(fd,buf,PAGE_SIZE);
-		return 0;
-	}
-	else{
-		printf("ERROR, page not exists");
-		return -1;
-	}*/
 }
 
+
 /*
+ * Basically, the virtual_addr is assigned by Class AddressSpace,
+ *
  * write *buf to file, size of buf no more than one page
  */
-int StorageManagement::WriteOnePage(ADDR virtual_addr,const void *buf, unsigned int length){
+int StorageManagement::WritePage(ADDR virtual_addr,const void *buf, unsigned int length){
 	if(length > PAGE_SIZE){
 		printf("ERROR: Write more than one page!");
 		return -1;
@@ -260,16 +320,17 @@ int StorageManagement::WriteOnePage(ADDR virtual_addr,const void *buf, unsigned 
 
 	map<ADDR,ADDR>::iterator iter;
 	iter = addr_map.find(page_id);
+
 	/*
 	 *the address already have been mapped,
 	 *which means the page has contents
 	 *invalid old page, and assign new pages
 	 */
-	if(iter == addr_map.end()){
+	if(iter != addr_map.end()){
 		Frame frame = this->frame_table.frame_table[iter->second];
-		frame.is_valid = false;
+		frame.is_modified = false;
 		Page page = this->segment_table.seg_table[seg_id].page_table[page_id];
-		page.is_valid = false;
+		page.is_modified = false;
 	}
 	/*
 	 * allocate new page
