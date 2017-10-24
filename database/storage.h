@@ -9,7 +9,8 @@
 #include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+//#include <string.h>
+#include <cstring>
 #include <fstream>
 #include <stack>
 #include <unistd.h>
@@ -20,7 +21,7 @@
 using namespace std;
 
 
-#define BUFFER_SIZE		1
+#define BUFFER_SIZE		16
 #define PAGE_SIZE		4096 //1024 * 4
 #define MAX_SEG_SIZE	256 * 1024 * 4
 /*
@@ -107,22 +108,29 @@ public:
 	bool is_modified;
 	bool is_used;
 	void *content;
+	ADDR start_addr;
 	unsigned int free_tuples;//bit map 8 tuples in 1 page
 	//Frame frame;
 	Page(){
 		this->page_id = 0;
+		this->start_addr = 0;
 		this->is_modified = true;
 		this->is_used = true;
 		this->free_tuples = 0;
 		this->content=(char*)malloc(sizeof(char)*PAGE_SIZE);
 	}
-	Page(ADDR page_id,bool is_modified,bool is_used){
+	Page(ADDR page_id, bool is_modified,bool is_used){
 		this->page_id = page_id;
+		this->start_addr = 0;
 		this->is_modified = is_modified;
 		this->is_used = is_used;
 		this->content = NULL;
 		this->free_tuples = 0;
 		this->content=(char*)malloc(sizeof(char)*PAGE_SIZE);
+	}
+	~Page(){
+		free(this->content);
+		cout<<"Page free"<<endl;
 	}
 };
 
