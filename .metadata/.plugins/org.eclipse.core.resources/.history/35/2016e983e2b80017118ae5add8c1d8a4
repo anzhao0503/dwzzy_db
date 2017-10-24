@@ -1,0 +1,12 @@
+/*
+ * format.h
+ *
+ *  Created on: Oct 24, 2017
+ *      Author: wcw
+ */
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstring>
+
+char* encode(int input, string dtyp, int length)

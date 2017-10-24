@@ -1,0 +1,40 @@
+/*
+ * format.cpp
+ *
+ *  Created on: Oct 24, 2017
+ *      Author: wcw
+ */
+#include "format.h"
+char* encode(char* input, string dtyp, int length) {
+	char* res = (char*)malloc(sizeof(char)*length+1);
+	if (dtyp == "int") {
+		memcpy(res, input, strlen(input));
+	} else if (dtyp == "float") {
+		memcpy(res, input, strlen(input));
+	} else if (dtyp == "char") {
+		memcpy(res, input, strlen(input));
+	} else if (dtyp == "varchar") {
+		// 1-3 bit means length of varchar
+		if (strlen(input) < 10) {
+			res[0] = '0';
+			res[1] = '0';
+		} else if (strlen(input) < 100) {
+			res[0] = '0';
+		}
+		char tmp[sizeof(int)+1];
+		sprintf(tmp, "%d", strlen(input));
+		strcat(res, tmp);
+		cout<<res<<endl;
+		strcat(res, input);
+	} else {
+		cout << "False data type" << endl;
+		return NULL;
+	}
+	for (int j = strlen(res); j < length; j++) {
+		res[j] = ' ';
+	}
+	res[length] = '\0';
+	return res;
+}
+
+
