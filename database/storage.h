@@ -34,9 +34,11 @@ using namespace std;
 #define SEG_BIT 4
 #define PAGE_BIT 16
 #define OFFSET_BIT 12
+#define MAX_FRAME_COUNT 1048576 //2^20
 #define OFFSET_MASK 0XFFF
 #define PAGE_MASK	0XFFFF
 #define	SEG_MASK	0XF
+#define TUPLE_MASK  0XFF
 
 # define ADDR unsigned long
 
@@ -48,6 +50,9 @@ public:
 	ADDR frame_id;
 	bool is_modified;
 	bool is_used;
+	unsigned int ntuples;
+	unsigned int free_tuples;//bit map 8 tuples, 0 unused, 1used
+
 	/*
 	 * when load or write page, store content.
 	 */
@@ -58,13 +63,18 @@ public:
 		this->is_modified = is_modified;
 		this->frame_id = id;
 		this->is_used = is_used;
-		this->frame_content = new unsigned char[PAGE_SIZE]; //? pointer
+		this->ntuples = 0;
+		this->frame_content = new unsigned char[PAGE_SIZE];
+		this->free_tuples = 0;
 	}
 	Frame() {
 		this->is_modified=true;
-		this->frame_id=0;
 		this->is_used=true;
+		this->frame_id = 0;
+		this->ntuples = 0;
+		this->free_tuples = 0;
 		this->frame_content = new unsigned char[PAGE_SIZE];
+		this->frame_content = 0;
 	}
 	/*
 	 * get one frame with content,
@@ -75,12 +85,20 @@ public:
 	 * flush PAGE_SIZE to file fd
 	 */
 	int FlushFrame(const void* buf,int fd);
+	/*
+	 * set used tuple
+	 * 0<n<8
+	 */
+	int SetTuple(int n);
+	int FreeTuple(int n);
+	int TestTuple(int n);
+	void ResetFrame();
 };
 
 class FrameTable{
 public:
 	vector<Frame*> frame_table;
-	vector<ADDR*> free_frame_list;
+	stack<ADDR> free_frame_list;
 	/*
 	 * count frames
 	 */
@@ -91,6 +109,7 @@ public:
 	 */
 	ADDR AllocFrame();
 	vector<ADDR> AllocFrames(unsigned int nframes);
+
 	void CountInc(){
 		this->count++;
 	}
@@ -98,7 +117,9 @@ public:
 //			this->frame_table = new vector<Frame*>;
 //			this->free_frame_list  = new vector<ADDR*>;
 			this->count = 0;
-		}
+	}
+	void CollectFreeSpace();
+	ADDR GetFromFreeSpace();
 };
 
 class Page {
@@ -106,24 +127,29 @@ public:
 	ADDR page_id;
 	bool is_modified;
 	bool is_used;
-	void *content;
+	unsigned int ntuples;
+	char *content;
 	unsigned int free_tuples;//bit map 8 tuples in 1 page
-	//Frame frame;
 	Page(){
 		this->page_id = 0;
+		this->free_tuples = 0;
+		this->ntuples = 0;
 		this->is_modified = true;
 		this->is_used = true;
-		this->free_tuples = 0;
 		this->content=(char*)malloc(sizeof(char)*PAGE_SIZE);
 	}
 	Page(ADDR page_id,bool is_modified,bool is_used){
 		this->page_id = page_id;
 		this->is_modified = is_modified;
 		this->is_used = is_used;
-		this->content = NULL;
 		this->free_tuples = 0;
+		this->ntuples = 0;
 		this->content=(char*)malloc(sizeof(char)*PAGE_SIZE);
 	}
+	int SetTuple(int n);
+	int FreeTuple(int n);
+	int TestTuple(int n);
+	void ResetPage();
 };
 
 class Segment {
@@ -133,7 +159,7 @@ public:
 	map<ADDR,ADDR> addr_map; //<page_id,frame_id>
 	vector<Page*> page_table;
 	unsigned int count;
-	stack<unsigned int> free_pages;
+	stack<ADDR> free_pages;
 
 	Segment(){
 		this->seg_id = 0;
@@ -160,8 +186,9 @@ public:
 		this->count++;
 	}
 
-	int SetFreePage(unsigned int page_id);
-	unsigned int GetFreePage();
+	void CollectFreePage();
+	ADDR GetFreePage();
+
 };
 
 /*

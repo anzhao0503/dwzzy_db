@@ -245,16 +245,76 @@ void* Frame::GetFrameContent(int fd){
 }
 
 /*
- * new a frame, insert into frametable  and return a free frame_id.
+ * Nth tuple is used;
+ */
+int Frame::SetTuple(int n){
+	unsigned int tmp = this->free_tuples;
+	if((n<0)||(n>=8)){
+		cout<<"invalid tuple number!";
+		return -1;
+	}
+	this->free_tuples = tmp | (1<<(n & TUPLE_MASK));
+	return 0;
+}
+int Frame::FreeTuple(int n){
+	unsigned int tmp = this->free_tuples;
+	if((n<0)||(n>=8)){
+		cout<<"invalid tuple number!";
+		return -1;
+	}
+	this->free_tuples = tmp & (~(1<<(n & TUPLE_MASK)));
+	return 0;
+}
+/*
+ * test if n tuple is used
+ * 1 : used
+ * 0 : unused
+ */
+int Frame::TestTuple(int n){
+	unsigned int tmp = this->free_tuples;
+	return (tmp | (1<<(n & TUPLE_MASK)));
+}
+
+int Page::SetTuple(int n){
+	unsigned int tmp = this->free_tuples;
+	if((n<0)||(n>=8)){
+		cout<<"invalid tuple number!";
+		return -1;
+	}
+	this->free_tuples = tmp | (1<<(n & TUPLE_MASK));
+	return 0;
+}
+int Page::FreeTuple(int n){
+	unsigned int tmp = this->free_tuples;
+	if((n<0)||(n>=8)){
+		cout<<"invalid tuple number!";
+		return -1;
+	}
+	this->free_tuples = tmp & (~(1<<(n & TUPLE_MASK)));
+	return 0;
+}
+int Page::TestTuple(int n){
+	unsigned int tmp = this->free_tuples;
+	return (tmp | (1<<(n & TUPLE_MASK)));
+}
+
+/*
+ * new a frame, insert into frame table  and return a free frame_id.
  * !!!To be continued:
  * 					when frames count exceeds a max number, return from freelist
  */
 ADDR FrameTable::AllocFrame(){
 	unsigned int count = this->count;
-	Frame* new_frame = new Frame(count,true,true);
-	frame_table.insert((vector<Frame*>::iterator)frame_table.begin()+count, new_frame);
-	this->CountInc();
-	return new_frame->frame_id;
+	if(count < MAX_FRAME_COUNT){
+		Frame* new_frame = new Frame(count,true,true);
+		frame_table.insert((vector<Frame*>::iterator)frame_table.begin()+count, new_frame);
+		this->CountInc();
+		return new_frame->frame_id;
+	}
+	else{
+		ADDR frame_id = this->GetFromFreeSpace();
+		return frame_id;
+	}
 }
 vector<ADDR> FrameTable::AllocFrames(unsigned int nframes){
 	unsigned int i = 0;
@@ -264,6 +324,60 @@ vector<ADDR> FrameTable::AllocFrames(unsigned int nframes){
 	}
 	return addr;
 }
+/*
+ * Free Space Management
+ */
+void FrameTable::CollectFreeSpace(){
+	for(vector<Frame*>::const_iterator iter = this->frame_table.begin(); iter != this->frame_table.end();iter++){
+		if(!(*iter)->is_used){
+			ADDR tmp = (*iter)->frame_id;
+			this->free_frame_list.push(tmp);
+		}
+	}
+}
+void Frame::ResetFrame(){
+	this->free_tuples = 0;
+	this->is_modified = false;
+	this->is_used = false;
+	this->ntuples = 0;
+}
+ADDR FrameTable::GetFromFreeSpace(){
+	if(this->free_frame_list.size()==0){
+		cout << "There is no space left.";
+		return -1;
+	}
+	ADDR free_frame_id = this->free_frame_list.pop();
+	this->frame_table[free_frame_id]->ResetFrame();
+	return free_frame_id;
+}
+
+/*
+ * Free Page Management
+ */
+void Segment::CollectFreePage(){
+	for(vector<Page*>::const_iterator iter = this->page_table.begin();iter!=this->page_table.end();iter++){
+		if(!(*iter)->is_used){
+			ADDR tmp = (*iter)->page_id;
+			this->free_pages.push(tmp);
+		}
+	}
+}
+ADDR Segment::GetFreePage(){
+	if(this->free_pages.size()==0){
+		cout << "EROR: Invalid Page Address.";
+		return -1;
+	}
+	ADDR new_page_id  = this->free_pages.pop();
+	this->page_table[new_page_id]->ResetPage();
+	return new_page_id;
+}
+void Page::ResetPage(){
+	this->is_modified = false;
+	this->is_used = false;
+	this->ntuples = 0;
+	this->free_tuples=0;
+}
+
 
 /*
  * write frame content into file related offset
@@ -358,7 +472,8 @@ int StorageManagement::WritePage(ADDR virtual_addr,const void *buf, unsigned int
 	/*
 	 * allocate new page
 	 */
-	ADDR new_page = this->segment_table.seg_table[seg_id]->AllocPage();
+//	ADDR new_page = this->segment_table.seg_table[seg_id]->AllocPage();
+	ADDR new_page = this->GetPageId(virtual_addr);
 	ADDR new_frame = this->frame_table.AllocFrame();
 	addr_map.insert(map<ADDR,ADDR>::value_type (new_page,new_frame));
 	int ret = this->frame_table.frame_table[new_frame]->FlushFrame(buf,this->fd);
