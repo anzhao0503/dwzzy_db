@@ -5,21 +5,23 @@
  *      Author: wcw
  */
 
-#include<iostream>
-#include<cstring>
+#include <iostream>
+#include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <fstream>
-#include<stack>
+#include <stack>
 #include <unistd.h>
 #include <sys/types.h>
 #include <map>
+#include <vector>
 
 using namespace std;
 
 
-#define BUFFER_SIZE		16
-#define PAGE_SIZE		1024 * 4
+#define BUFFER_SIZE		1
+#define PAGE_SIZE		4096 //1024 * 4
 #define MAX_SEG_SIZE	256 * 1024 * 4
 /*
  * address space 8M
@@ -49,14 +51,20 @@ public:
 	/*
 	 * when load or write page, store content.
 	 */
-	unsigned char  frame_content[PAGE_SIZE];
+	unsigned char*  frame_content;
 
 	Frame(ADDR id, bool is_modified, bool is_used)
 	{
 		this->is_modified = is_modified;
 		this->frame_id = id;
 		this->is_used = is_used;
-		this->frame_content = NULL; //? pointer
+		this->frame_content = new unsigned char[PAGE_SIZE]; //? pointer
+	}
+	Frame() {
+		this->is_modified=true;
+		this->frame_id=0;
+		this->is_used=true;
+		this->frame_content = new unsigned char[PAGE_SIZE];
 	}
 	/*
 	 * get one frame with content,
@@ -71,8 +79,8 @@ public:
 
 class FrameTable{
 public:
-	Frame *frame_table;
-	ADDR *free_frame_list;
+	vector<Frame*> frame_table;
+	vector<ADDR*> free_frame_list;
 	/*
 	 * count frames
 	 */
@@ -82,13 +90,13 @@ public:
 	 * return a free frame_id
 	 */
 	ADDR AllocFrame();
-	ADDR* AllocFrames(unsigned int nframes);
+	vector<ADDR> AllocFrames(unsigned int nframes);
 	void CountInc(){
 		this->count++;
 	}
 	FrameTable(){
-			this->frame_table = NULL;
-			this->free_frame_list  = -1;
+//			this->frame_table = new vector<Frame*>;
+//			this->free_frame_list  = new vector<ADDR*>;
 			this->count = 0;
 		}
 };
@@ -99,14 +107,14 @@ public:
 	bool is_modified;
 	bool is_used;
 	void *content;
-	unsigned int free_tuples;//bit map
+	unsigned int free_tuples;//bit map 8 tuples in 1 page
 	//Frame frame;
 	Page(){
 		this->page_id = 0;
 		this->is_modified = true;
 		this->is_used = true;
 		this->free_tuples = 0;
-		this->content = NULL;
+		this->content=(char*)malloc(sizeof(char)*PAGE_SIZE);
 	}
 	Page(ADDR page_id,bool is_modified,bool is_used){
 		this->page_id = page_id;
@@ -114,6 +122,7 @@ public:
 		this->is_used = is_used;
 		this->content = NULL;
 		this->free_tuples = 0;
+		this->content=(char*)malloc(sizeof(char)*PAGE_SIZE);
 	}
 };
 
@@ -122,7 +131,7 @@ public:
 	ADDR seg_id;
 	ADDR start; //start from which frame id
 	map<ADDR,ADDR> addr_map; //<page_id,frame_id>
-	Page *page_table;
+	vector<Page*> page_table;
 	unsigned int count;
 	stack<unsigned int> free_pages;
 
@@ -130,13 +139,13 @@ public:
 		this->seg_id = 0;
 		this->start = 0;
 		this->count = 0;
-		this->page_table = NULL;
+//		this->page_table = new vector<Page>;
 	}
 	Segment(ADDR seg_id, ADDR start, unsigned int count){
 		this->count = count;
 		this->seg_id = seg_id;
 		this->start = start;
-		this->page_table = NULL;
+//		this->page_table = new vector<Page>;
 
 	}
 	/*
@@ -146,7 +155,7 @@ public:
 	 * return page_id;
 	 */
 	ADDR AllocPage();
-	ADDR* AllocPages(unsigned int npages);
+	vector<ADDR> AllocPages(unsigned int npages);
 	void CountInc(){
 		this->count++;
 	}
@@ -159,6 +168,7 @@ public:
  * record virtual base address
  */
 class AddressSpace{
+private:
 	ADDR current_seg;
 	ADDR current_addr;
 public:
@@ -177,6 +187,9 @@ public:
 	void ADDRInc(){
 		this->current_addr++;
 	}
+	void ADDRIncrease(int length) {
+		this->current_addr += length;
+	}
 	void SetBaseAddr(ADDR current_addr){
 		this->current_addr = current_addr;
 	}
@@ -186,13 +199,14 @@ public:
  */
 class SegmentTable {
 public:
-	Segment *seg_table;
+	vector<Segment*> seg_table;
 	unsigned int size;
 	SegmentTable(){
 		this->size = 1;
-		this->seg_table = Segment();
+		Segment* seg = new Segment();
+		this->seg_table.push_back(seg);
 	}
-	SegmentTable(unsigned int size, Segment *seg_table) //
+	SegmentTable(unsigned int size, vector<Segment*> seg_table) //
 	{
 		this->size = size;
 		this->seg_table = seg_table;
@@ -240,7 +254,7 @@ private:
 	/*
 	 * parse address
 	 */
-	ADDR GetPageId(ADDR virtual_addr);
+
 	ADDR GetSegId(ADDR virtual_addr);
 	ADDR GetOffset(ADDR virtual_addr);
 	/*
@@ -251,18 +265,18 @@ private:
 	int WritePage(ADDR virtual_addr,const void *buf, unsigned int length);
 	//int WriteFile(ADDR virtual_addr, const void *buf, unsigned int length);//virtual_addr <- alloc
 
+	int WriteBuffer(ADDR virtual_addr, void *buf, unsigned int length);
 public:
 	int fd; //for file operations
 	BufferTableItem  buffer_table[BUFFER_SIZE];
 	Frame buffer[BUFFER_SIZE];
-
+	ADDR GetPageId(ADDR virtual_addr);
 
 	StorageManagement();
 	~StorageManagement();
 
-	void InitStorage(char *path);
+	int InitStorage(char *path); //flag=0:create new file else:do not need create
 	int ReadBuffer(ADDR virtual_addr, void *buf, unsigned int length);
-	int Write(const void *buf, unsigned int length);
-	int WriteBuffer(ADDR virtual_addr, const void *buf, unsigned int length);
+	int Write(void *buf, unsigned int length);
 	void FlushBuffer();
 };

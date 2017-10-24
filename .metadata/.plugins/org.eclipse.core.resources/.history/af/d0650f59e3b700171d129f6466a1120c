@@ -1,0 +1,24 @@
+/*
+ * test.cpp
+ *
+ *  Created on: Oct 23, 2017
+ *      Author: chelsea
+ */
+#include "storage.h"
+#include <iostream>
+#include <fstream>
+void main() {
+	StorageManagement storage_manager;
+	storage_manager.InitStorage("tmp");
+	fstream out;
+	char buffer[PAGE_SIZE];
+	out.open("test.txt",ios::in);
+	while(!out.eof())
+	{
+	   out.getline(buffer,PAGE_SIZE,'\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
+	   storage_manager.Write(buffer, sizeof(buffer));
+	}
+	out.close();
+}
+
+
