@@ -6476,3 +6476,68 @@ Invoking: GCC C++ Linker
 g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./storage.o ./test.o   
 Finished building target: database
  
+02:39:39 **** Build of configuration Debug for project database ****
+make all 
+Building file: ../.metadata/.plugins/org.eclipse.cdt.make.core/specs.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF".metadata/.plugins/org.eclipse.cdt.make.core/specs.d" -MT".metadata/.plugins/org.eclipse.cdt.make.core/specs.d" -o ".metadata/.plugins/org.eclipse.cdt.make.core/specs.o" "../.metadata/.plugins/org.eclipse.cdt.make.core/specs.c"
+Finished building: ../.metadata/.plugins/org.eclipse.cdt.make.core/specs.c
+ 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.d" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:252:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:184:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:237:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘int StorageManagement::LoadPage(long unsigned int, void*)’:
+../storage.cpp:326:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:309:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:342:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.d" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:252:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:12:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./storage.o ./test.o   
+Finished building target: database
+ 
+02:39:43 **** Incremental Build of configuration Debug for project database ****
+make all 
+make: Nothing to be done for `all'.
+02:39:47 **** Incremental Build of configuration Debug for project database ****
+make all 
+make: Nothing to be done for `all'.
+02:39:48 **** Incremental Build of configuration Debug for project database ****
+make all 
+make: Nothing to be done for `all'.

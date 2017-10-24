@@ -4996,3 +4996,19 @@ java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/d
 	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
 	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 2 10035 2017-10-24 01:16:36.098
+!MESSAGE The workspace will exit with unsaved changes in this session.
+!SESSION 2017-10-24 02:38:26.807 -----------------------------------------------
+eclipse.buildId=4.5.0.I20150603-2000
+java.version=1.8.0_121
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.core.resources 2 10035 2017-10-24 02:39:12.935
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-10-24 02:39:45.448
+!MESSAGE Indexed 'database' (2 sources, 156 headers) in 10.1 sec: 13,970 declarations; 24,585 references; 0 unresolved inclusions; 0 syntax errors; 2 unresolved names (0.0052%)
