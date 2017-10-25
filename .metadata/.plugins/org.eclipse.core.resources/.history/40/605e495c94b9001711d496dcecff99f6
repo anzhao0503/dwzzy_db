@@ -67,10 +67,11 @@ int main() {
 	int retu = storage_manager->ReadBuffer(81200, buf, PAGE_SIZE);
 	if (retu != 0)
 	{
-		char* final = (char*)calloc(sizeof(char)*MAX_TUPLE_SIZE, sizeof(char));
-		final = decode(buf);
-		cout<<final<<endl;
-		free(final);
+//		char* final = (char*)calloc(sizeof(char)*MAX_TUPLE_SIZE, sizeof(char));
+//		final = decode(buf);
+//		cout<<final<<endl;
+//		free(final);
+		cout<<"Read: "<<(char*)buff<<endl;
 	}
 	delete storage_manager;
 	return 0;

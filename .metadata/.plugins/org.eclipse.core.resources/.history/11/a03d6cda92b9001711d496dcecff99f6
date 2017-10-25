@@ -141,8 +141,11 @@ int StorageManagement::ReadBuffer(ADDR virtual_addr, void *buf, unsigned int len
 		return this->ReadBuffer(virtual_addr, buf, length);
 	}
 	else {
-		//hit
+		//命中
+		cout<<"index "<<index<<endl;
+		cout<<buffer[index].frame_content<<endl;
 		memcpy(buf, buffer[index].frame_content, length);
+		cout<<(char*)buf<<endl;
 		this->buffer_table[index].U = true;
 		return length;
 	}

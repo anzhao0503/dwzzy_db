@@ -40,7 +40,7 @@ char* encode(char* input, string dtyp, int length) {
 }
 
 char* decode(char* input) {
-	char* res = (char*)malloc(sizeof(char)*512);
+	char* res = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
 	int j = 0;
 	int i = 0;
 	while(i < 512) {

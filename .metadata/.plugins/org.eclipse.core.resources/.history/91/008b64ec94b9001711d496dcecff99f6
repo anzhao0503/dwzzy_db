@@ -71,6 +71,7 @@ int main() {
 		final = decode(buf);
 		cout<<final<<endl;
 		free(final);
+//		cout<<"Read: "<<(char*)buf<<endl;
 	}
 	delete storage_manager;
 	return 0;

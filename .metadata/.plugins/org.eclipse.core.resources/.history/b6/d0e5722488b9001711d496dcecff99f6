@@ -129,6 +129,7 @@ int StorageManagement::ReadBuffer(ADDR virtual_addr, void *buf, unsigned int len
 		 * load page using virtual address
 		 */
 		unsigned char* ret = this->LoadPage(virtual_addr, length);
+		cout<<"rest "<<ret<<endl;
 		if (ret == NULL) {
 			cout << "Content does not exist in file" << endl;
 			return 0;
@@ -141,7 +142,7 @@ int StorageManagement::ReadBuffer(ADDR virtual_addr, void *buf, unsigned int len
 		return this->ReadBuffer(virtual_addr, buf, length);
 	}
 	else {
-		//hit
+		//命中
 		memcpy(buf, buffer[index].frame_content, length);
 		this->buffer_table[index].U = true;
 		return length;

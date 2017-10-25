@@ -67,6 +67,7 @@ int main() {
 	int retu = storage_manager->ReadBuffer(81200, buf, PAGE_SIZE);
 	if (retu != 0)
 	{
+		cout<<"ok"<<endl;
 		char* final = (char*)calloc(sizeof(char)*MAX_TUPLE_SIZE, sizeof(char));
 		final = decode(buf);
 		cout<<final<<endl;

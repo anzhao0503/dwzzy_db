@@ -9,10 +9,10 @@
 #include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
+//#include <string.h>
 #include <fstream>
 #include <stack>
 #include <unistd.h>
-#include <fcntl.h>
 #include <sys/types.h>
 #include <map>
 #include <vector>
@@ -170,11 +170,14 @@ public:
 		this->seg_id = 0;
 		this->start = 0;
 		this->count = 0;
+//		this->page_table = new vector<Page>;
 	}
 	Segment(ADDR seg_id, ADDR start, unsigned int count){
 		this->count = count;
 		this->seg_id = seg_id;
 		this->start = start;
+//		this->page_table = new vector<Page>;
+
 	}
 	/*
 	 * assign caller a new free page;
@@ -205,6 +208,7 @@ public:
 		this->current_seg = current_addr >> 28;
 	}
 	ADDR GetCurrentAddr(){
+		//this->current_addr = this->current_seg << 28;
 		return this->current_addr;
 	}
 	ADDR GetCurrentSeg(){
@@ -233,7 +237,7 @@ public:
 		Segment* seg = new Segment();
 		this->seg_table.push_back(seg);
 	}
-	SegmentTable(unsigned int size, vector<Segment*> seg_table)
+	SegmentTable(unsigned int size, vector<Segment*> seg_table) //
 	{
 		this->size = size;
 		this->seg_table = seg_table;
@@ -249,12 +253,12 @@ public:
 
 class BufferTableItem {
 public:
-	int index; //index in buffer table
+	int index; //在Buffer_table中的index
 	ADDR virtual_addr;
 	bool in_buffer;
-	// whether need to write back to disk when swaped out
+	// 换出时是否需要写回硬盘
 	bool is_written;
-	// flags used in NRU
+	// NRU标志位
 	bool U;
 	bool M;
 	BufferTableItem();
@@ -266,7 +270,7 @@ private:
 	/*
 	 * buffer management
 	 */
-	int last_used; //last position of pointer in NRU
+	int last_used; //置换策略中上一次访问的位置
 	void InitBufferTable();
 	int HitBuffer(ADDR virtual_addr);
 	BufferTableItem* NRU(BufferTableItem* buffer_table);
@@ -288,7 +292,9 @@ private:
 	 * Given address, load & write page
 	 */
 	unsigned char* LoadPage(ADDR virtual_addr, int length);
+	//int loadPages(ADDR virtual_addr, unsigned int npage);
 	int WritePage(ADDR virtual_addr,const void *buf, unsigned int length);
+	//int WriteFile(ADDR virtual_addr, const void *buf, unsigned int length);//virtual_addr <- alloc
 
 	int WriteBuffer(ADDR virtual_addr, void *buf, unsigned int length);
 public:

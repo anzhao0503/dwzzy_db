@@ -6208,3 +6208,148 @@ java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/d
 	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
 	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.launch 4 104 2017-10-25 19:20:51.496
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.launch 4 104 2017-10-25 19:20:51.497
+!MESSAGE /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.launch 4 104 2017-10-25 19:21:49.735
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.launch 4 104 2017-10-25 19:21:49.736
+!MESSAGE /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.launch 4 104 2017-10-25 19:22:28.680
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.launch 4 104 2017-10-25 19:22:28.680
+!MESSAGE /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.launch 4 104 2017-10-25 19:24:28.030
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.launch 4 104 2017-10-25 19:24:28.032
+!MESSAGE /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.launch 4 104 2017-10-25 22:54:11.159
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.launch 4 104 2017-10-25 22:54:11.181
+!MESSAGE /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+!STACK 0
+java.io.FileNotFoundException: /home/chelsea/Documents/dwzzy_db/database/Debug/database not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate2.verifyProgramPath(AbstractCLaunchDelegate2.java:676)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.checkBinaryDetails(LocalRunLaunchDelegate.java:129)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.runLocalApplication(LocalRunLaunchDelegate.java:74)
+	at org.eclipse.cdt.launch.internal.LocalRunLaunchDelegate.launch(LocalRunLaunchDelegate.java:63)
+	at org.eclipse.cdt.launch.internal.LocalCDILaunchDelegate.launch(LocalCDILaunchDelegate.java:73)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:885)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:739)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1039)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1256)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)

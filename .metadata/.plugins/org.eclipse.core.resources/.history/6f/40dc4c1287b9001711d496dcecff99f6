@@ -141,7 +141,7 @@ int StorageManagement::ReadBuffer(ADDR virtual_addr, void *buf, unsigned int len
 		return this->ReadBuffer(virtual_addr, buf, length);
 	}
 	else {
-		//hit
+		//命中
 		memcpy(buf, buffer[index].frame_content, length);
 		this->buffer_table[index].U = true;
 		return length;
@@ -488,7 +488,7 @@ int StorageManagement::WritePage(ADDR virtual_addr,const void *buf, unsigned int
 	 */
 	ADDR new_page = this->GetPageId(virtual_addr);
 	ADDR new_frame = this->frame_table.AllocFrame();
-	this->segment_table.seg_table[seg_id]->addr_map.insert(map<ADDR,ADDR>::value_type (new_page,new_frame));
+	addr_map.insert(map<ADDR,ADDR>::value_type (new_page,new_frame));
 	int ret = this->frame_table.frame_table[new_frame]->FlushFrame(buf,this->fd);
 	return ret;
 }
