@@ -1,0 +1,152 @@
+/*
+ * test.cpp
+ *
+ *  Created on: Oct 23, 2017
+ *      Author: chelsea
+ */
+#include "storage.h"
+#include "format.h"
+#include <iostream>
+#include <fstream>
+//int main() {
+//	StorageManagement *storage_manager = new StorageManagement();
+//	char* name="tmp.txt";
+//	int ret = storage_manager->InitStorage(name);
+//	if (ret == -1) return ret;
+//	fstream out;
+//	char buffer[MAX_TUPLE_SIZE+1];
+//	out.open("test.tbl",ios::in);
+//	while(!out.eof())
+//	{
+//	   out.getline(buffer,MAX_TUPLE_SIZE,'\n');
+//	   for (int i = strlen(buffer); i < MAX_TUPLE_SIZE; i++)
+//		   buffer[i] = '*';
+//	   buffer[MAX_TUPLE_SIZE] = '\0';
+//	   storage_manager->Write(buffer, MAX_TUPLE_SIZE);
+//	}
+//	out.close();
+//	char* buf;
+//	storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+//	cout<<(char*)buf<<endl;
+//	delete storage_manager;
+//	cout<<"end"<<endl;
+//	return 0;
+//}
+
+int main() {
+	StorageManagement *storage_manager = new StorageManagement();
+	char* name="tmp.txt";
+	int ret = storage_manager->InitStorage(name);
+	if (ret == -1) return ret;
+	FILE* fp;
+	char buffer[MAX_TUPLE_SIZE+1];
+//	out.open("new.tbl",ios::in);
+	if ((fp = fopen("supplier.tbl", "r")) == NULL) {
+		cout<<"error"<<endl;
+		return -1;
+	}
+	int j = 0;
+	while(!feof(fp)) {
+	   fgets(buffer, sizeof(buffer), fp);
+//	   cout<<buffer<<endl;
+	   char* input = (char*)calloc(sizeof(char)*MAX_TUPLE_SIZE+1, sizeof(char));
+	   char seg[] = "|";
+	   char* substr;
+	   substr = strtok(buffer, seg);
+	   char* part = encode(substr, "int", 5);
+	   memcpy(input, part, 5);
+	   substr = strtok(NULL, seg);
+//	   cout<<"substr1 "<<substr<<endl;
+	   part = encode(substr, "char", 18);
+	   strcat(input, part);
+
+	   substr = strtok(NULL, seg);
+//	   cout<<"substr2 "<<substr<<endl;
+	   part = encode(substr, "varchar", 100);
+	   strcat(input, part);
+
+	   substr = strtok(NULL, seg);
+	   part = encode(substr, "int", 3);
+	   strcat(input, part);
+
+	   substr = strtok(NULL, seg);
+	   part = encode(substr, "char", 15);
+	   strcat(input, part);
+
+	   substr = strtok(NULL, seg);
+	   part = encode(substr, "float", 15);
+	   strcat(input, part);
+
+	   substr = strtok(NULL, seg);
+	   part = encode(substr, "varchar", 150);
+	   strcat(input, part);
+
+	   for (int i = strlen(input); i < MAX_TUPLE_SIZE; i++)
+		   input[i] = '*';
+	   input[MAX_TUPLE_SIZE] = '\0';
+	   cout<<"input "<<input<<endl;
+
+	   storage_manager->WriteFile(input, MAX_TUPLE_SIZE);
+	   j++;
+	   free(input);
+	}
+	fclose(fp);
+	char *buf = (char*)calloc(sizeof(char)*4096,sizeof(char));
+	storage_manager->ReadFile(8120, buf);
+	cout<<buf<<endl;
+	cout<<"end "<<endl;
+	delete storage_manager;
+//	while(!out.eof())
+//	{
+//	   cout<<"start"<<endl;
+//	   char input[MAX_TUPLE_SIZE+1];
+//	   out.getline(buffer,MAX_TUPLE_SIZE,'\n');
+//	   cout<<buffer<<endl;
+//	   char seg[] = "|";
+//	   int i = 0;
+//	   char *substr = strtok(buffer, seg);
+//	   char* part = encode(substr, "int", 5);
+//	   memcpy(input, part, 5);
+//	   substr = strtok(NULL, seg);
+//	   part = encode(substr, "char", 18);
+//	   strcat(input, part);
+//
+//	   substr = strtok(NULL, seg);
+//	   part = encode(substr, "varchar", 100);
+//	   strcat(input, part);
+//
+//	   substr = strtok(NULL, seg);
+//	   part = encode(substr, "int", 3);
+//	   strcat(input, part);
+//
+//	   substr = strtok(NULL, seg);
+//	   part = encode(substr, "char", 15);
+//	   strcat(input, part);
+//
+//	   substr = strtok(NULL, seg);
+//	   part = encode(substr, "float", 15);
+//	   strcat(input, part);
+//
+//	   substr = strtok(NULL, seg);
+//	   part = encode(substr, "varchar", 150);
+//	   strcat(input, part);
+//
+//	   for (int i = strlen(input); i < MAX_TUPLE_SIZE; i++)
+//		   input[i] = '*';
+//	   input[MAX_TUPLE_SIZE] = '\0';
+//	   cout<<"input "<<input<<endl;
+//	   storage_manager->Write(buffer, MAX_TUPLE_SIZE);
+//	   cout<<"end "<<endl;
+//	}
+//	out.close();
+////	char* buf;
+////	storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+////	cout<<(char*)buf<<endl;
+//	delete storage_manager;
+//	cout<<"end"<<endl;
+//	return 0;
+//	char* res = encode("rewr", "char", 20);
+//	cout<<res<<endl;
+	return 0;
+}
+

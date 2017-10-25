@@ -15890,3 +15890,1277 @@ Invoking: GCC C++ Linker
 g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
 Finished building target: database
  
+07:31:37 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+Finished building: ../format.cpp
+ 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:192:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:254:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:460:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:439:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:476:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:91:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+07:32:34 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:92:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+07:33:25 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:93:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+07:35:08 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:93:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+07:36:16 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:93:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+07:38:36 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:55:11: error: redeclaration of ‘char* substr’
+     char *substr = strtok(buffer, seg);
+           ^
+../test.cpp:54:11: error: ‘char* substr’ previously declared here
+     char* substr;
+           ^
+make: *** [test.o] Error 1
+07:39:03 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:55:33: error: invalid conversion from ‘char*’ to ‘char’ [-fpermissive]
+     *substr = strtok(buffer, seg);
+                                 ^
+make: *** [test.o] Error 1
+07:39:26 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:96:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+07:41:25 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:96:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+07:42:32 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:95:51: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadBuffer(8120, buf, PAGE_SIZE);
+                                                   ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:04:52 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:202:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:264:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:470:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:449:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:486:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:95:38: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadFile(8120, buf);
+                                      ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:05:59 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+../test.cpp:95:38: warning: ‘buf’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  storage_manager->ReadFile(8120, buf);
+                                      ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:09:25 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:14:21 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:202:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:264:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:470:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:449:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:486:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:16:20 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:203:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:265:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:471:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:450:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:487:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:17:31 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:18:35 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:21:26 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:22:38 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:23:41 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:26:56 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:40:15 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:211:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:273:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:479:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:458:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:495:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:41:21 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:211:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:273:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:479:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:458:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:495:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:42:15 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:211:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:273:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:479:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:458:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:495:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:43:07 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘void StorageManagement::WriteFile(char*, unsigned int, int)’:
+../storage.cpp:159:10: error: ‘page_ie’ was not declared in this scope
+    cout<<page_ie<<endl;
+          ^
+../storage.cpp:158:8: warning: unused variable ‘page_id’ [-Wunused-variable]
+    int page_id = rand()%(count-128);
+        ^
+In file included from ../storage.cpp:7:0:
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:212:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:274:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:480:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:459:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:496:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+make: *** [storage.o] Error 1
+08:45:25 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:212:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:274:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:480:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:459:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:496:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:47:28 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:213:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:275:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:481:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:460:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:497:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:51:29 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:211:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:273:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:479:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:458:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:495:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+08:52:26 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:211:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:273:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:479:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:458:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:495:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:07:42 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+In file included from ../format.h:11:0,
+                 from ../format.cpp:7:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+Finished building: ../format.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:45:7: error: redefinition of ‘class Frame’
+ class Frame {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:45:7: error: previous definition of ‘class Frame’
+ class Frame {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:96:7: error: redefinition of ‘class FrameTable’
+ class FrameTable{
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:96:7: error: previous definition of ‘class FrameTable’
+ class FrameTable{
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:123:7: error: redefinition of ‘class Page’
+ class Page {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:123:7: error: previous definition of ‘class Page’
+ class Page {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:160:7: error: redefinition of ‘class Segment’
+ class Segment {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:160:7: error: previous definition of ‘class Segment’
+ class Segment {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:201:7: error: redefinition of ‘class AddressSpace’
+ class AddressSpace{
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:201:7: error: previous definition of ‘class AddressSpace’
+ class AddressSpace{
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:231:7: error: redefinition of ‘class SegmentTable’
+ class SegmentTable {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:231:7: error: previous definition of ‘class SegmentTable’
+ class SegmentTable {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:254:7: error: redefinition of ‘class BufferTableItem’
+ class BufferTableItem {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:254:7: error: previous definition of ‘class BufferTableItem’
+ class BufferTableItem {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:268:7: error: redefinition of ‘class StorageManagement’
+ class StorageManagement {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:268:7: error: previous definition of ‘class StorageManagement’
+ class StorageManagement {
+       ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+make: *** [test.o] Error 1
+09:11:15 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+In file included from ../format.h:11:0,
+                 from ../format.cpp:7:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+Finished building: ../format.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:45:7: error: redefinition of ‘class Frame’
+ class Frame {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:45:7: error: previous definition of ‘class Frame’
+ class Frame {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:96:7: error: redefinition of ‘class FrameTable’
+ class FrameTable{
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:96:7: error: previous definition of ‘class FrameTable’
+ class FrameTable{
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:123:7: error: redefinition of ‘class Page’
+ class Page {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:123:7: error: previous definition of ‘class Page’
+ class Page {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:160:7: error: redefinition of ‘class Segment’
+ class Segment {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:160:7: error: previous definition of ‘class Segment’
+ class Segment {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:201:7: error: redefinition of ‘class AddressSpace’
+ class AddressSpace{
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:201:7: error: previous definition of ‘class AddressSpace’
+ class AddressSpace{
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:231:7: error: redefinition of ‘class SegmentTable’
+ class SegmentTable {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:231:7: error: previous definition of ‘class SegmentTable’
+ class SegmentTable {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:254:7: error: redefinition of ‘class BufferTableItem’
+ class BufferTableItem {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:254:7: error: previous definition of ‘class BufferTableItem’
+ class BufferTableItem {
+       ^
+In file included from ../format.h:11:0,
+                 from ../test.cpp:8:
+../storage.h:268:7: error: redefinition of ‘class StorageManagement’
+ class StorageManagement {
+       ^
+In file included from ../test.cpp:7:0:
+../storage.h:268:7: error: previous definition of ‘class StorageManagement’
+ class StorageManagement {
+       ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+make: *** [test.o] Error 1
+09:12:14 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+Finished building: ../format.cpp
+ 
+Building file: ../storage.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"storage.d" -MT"storage.o" -o "storage.o" "../storage.cpp"
+In file included from ../storage.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../storage.cpp: In member function ‘int StorageManagement::Write(void*, unsigned int)’:
+../storage.h:24:20: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+ #define PAGE_SIZE  4096 //1024 * 4
+                    ^
+../storage.cpp:211:60: note: in expansion of macro ‘PAGE_SIZE’
+    memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, MAX_TUPLE_SIZE);
+                                                            ^
+../storage.cpp: In member function ‘void* Frame::GetFrameContent(int)’:
+../storage.cpp:273:54: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+   printf("ERROR: Invalid Frame! %u\n ",this->frame_id);
+                                                      ^
+../storage.cpp: In member function ‘unsigned char* StorageManagement::LoadPage(long unsigned int, int)’:
+../storage.cpp:479:52: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
+  printf("ERROR:cannot find page %u in map!",page_id);
+                                                    ^
+../storage.cpp:458:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+../storage.cpp: In member function ‘int StorageManagement::WritePage(long unsigned int, const void*, unsigned int)’:
+../storage.cpp:495:7: warning: unused variable ‘start_id’ [-Wunused-variable]
+  ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+       ^
+Finished building: ../storage.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+./test.o: In function `main':
+/home/chelsea/Documents/dwzzy_db/database/Debug/../test.cpp:99: undefined reference to `decode(char*)'
+collect2: error: ld returned 1 exit status
+make: *** [database] Error 1
+09:13:00 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:14:00 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+Finished building: ../format.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:15:10 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:19:46 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+Finished building: ../format.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:24:01 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+Finished building: ../format.cpp
+ 
+Building file: ../test.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"test.d" -MT"test.o" -o "test.o" "../test.cpp"
+In file included from ../test.cpp:7:0:
+../storage.h:283:42: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
+  AddressSpace addr_space = AddressSpace(0);
+                                          ^
+../test.cpp: In function ‘int main()’:
+../test.cpp:38:13: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char* name="tmp.txt";
+             ^
+Finished building: ../test.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:27:55 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+Finished building: ../format.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:29:59 **** Incremental Build of configuration Debug for project database ****
+make all 
+Building file: ../format.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"format.d" -MT"format.o" -o "format.o" "../format.cpp"
+Finished building: ../format.cpp
+ 
+Building target: database
+Invoking: GCC C++ Linker
+g++  -o "database"  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o  ./format.o ./storage.o ./test.o   
+Finished building target: database
+ 
+09:30:32 **** Incremental Build of configuration Debug for project database ****
+make all 
+make: Nothing to be done for `all'.

@@ -39,4 +39,75 @@ char* encode(char* input, string dtyp, int length) {
 	return res;
 }
 
+char* decode(char* input) {
+	char* res = (char*)malloc(sizeof(char));
+	int j = 0;
+	int i = 0;
+	while(i < 512) {
+		while(i < 5 && input[i]!= '*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		res[j]='|';
+		j++;
+		i=5;
+		while(i < 23 && input[i]!='*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		i=23;
+		res[j]='|';
+		j++;
+		while(i < 123 && input[i]!='*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		i=123;
+		res[j]='|';
+		j++;
+		while(i < 126 && input[i]!='*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		i=126;
+		res[j]='|';
+		j++;
+		while(i < 141 && input[i]!='*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		i=141;
+		res[j]='|';
+		j++;
+		while(i < 156 && input[i]!='*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		i=156;
+		res[j]='|';
+		j++;
+		while(i < 306 && input[i]!='*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		i=306;
+		res[j]='|';
+		j++;
+		while(i < 512 && input[i]!='*') {
+			res[j] = input[i];
+			i++;
+			j++;
+		}
+		i=512;
+	}
 
+	res[j] = '\0';
+	return res;
+}
