@@ -1,8 +1,0 @@
-00:15:43 **** Build of configuration Default for project postgresql ****
-make all 
-You need to run the 'configure' program first. See the file
-'INSTALL' for installation instructions.
-make: *** [all] Error 1
-
-00:15:44 Build Finished (took 170ms)
-
