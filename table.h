@@ -5,6 +5,7 @@
 #include "meta_info.h"
 #include "bpt.h"
 #include "linear_hash.h"
+#include "encoder.cpp"
 #include <vector>
 
 
@@ -17,7 +18,35 @@ enum Operator {
 	ge
 };
 
+class TableManagement {
+public:
+	StorageManagement* storage_manager;
+	Encoder* encoder;
+	vector<Table> tables;
+	TableManagement();
+	TableManagement(char* db_name);
+	~TableManagement();
+	int InitTable(char* tb_name, int db_id, int index, bool exist);
+	char* GetTuple(int tb_id, int index);
 
+	bool TableScan(char* tb_name);
+	bool IndexScan(char* tb_name);
+
+	bool Select(char* tb_name, vector<int> cols, vector<Operator> operators, vector<key_t> keys); // four types of select
+	bool TotalSelect(char* tb_name);
+	bool ESelect(char* tb_name, int col, key_t key); // equal or non-equal
+	bool RangeSelect(char* tb_name, int col, key_t left, key_t right); // range select
+
+	bool Project(char* tb_name, vector<int> cols);
+
+	bool LoopJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
+	bool SortJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
+	bool HashJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
+	bool IndexJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
+	bool ThreeJoin(char* tb_name_1, char* tb_name_2, char* tb_name_3, vector<int> cols);
+	bool ProductLoopJoin(char* left_tb_name, Table* right_tb_name,);
+	bool ProductIndexJoin(char* left_tb_name, Table* right_tb_name,);
+};
 
 class Table {
 public:
@@ -25,6 +54,7 @@ public:
 	ADDR start_addr;
 	int index; // index in segment
 	TableMeta *table_meta;
+	Table();
 	Table(char* name, int db_id, int index, ADDR seg_id, ADDR start_addr, bool exist, AttrType *types, int *attr_length, int attribute_num);
 	~Table();
 

@@ -22,11 +22,11 @@
 using namespace std;
 
 enum AttrType {
-	Integer,
-	Float,
-	Char,
-	Varchar,
-	Date
+	INTEGER,
+	FLOAT,
+	CHAR,
+	VARCHAR,
+	DATE
 };
 
 class AttributeMeta {
@@ -37,7 +37,7 @@ public:
 	int attribute_index;
 	int attribute_offset;
 	AttributeMeta() {
-		attribute_type = Integer;
+		attribute_type = INTEGER;
 		attribute_index = -1;
 		attribute_length = 0;
 		attribute_offset = 0;
