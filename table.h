@@ -6,9 +6,10 @@
 #include "bpt.h"
 #include "linear_hash.h"
 #include "encoder.cpp"
+#include "predefined.h"
 #include <vector>
 
-
+typedef int value_t;
 enum Operator {
 	eq,
 	nq,
@@ -21,23 +22,28 @@ enum Operator {
 class TableManagement {
 public:
 	StorageManagement* storage_manager;
-	Encoder* encoder;
 	vector<Table> tables;
 	TableManagement();
 	TableManagement(char* db_name);
 	~TableManagement();
 	int InitTable(char* tb_name, int db_id, int index, bool exist);
-	char* GetTuple(int tb_id, int index);
 
-	bool TableScan(char* tb_name);
-	bool IndexScan(char* tb_name);
+	char* GetTuple(int tb_id, int index); // get tuple by index of table
+	char* GetTuple(int tb_id, ADDR addr, int tmp); // get tuple by address
 
-	bool Select(char* tb_name, vector<int> cols, vector<Operator> operators, vector<key_t> keys); // four types of select
-	bool TotalSelect(char* tb_name);
-	bool ESelect(char* tb_name, int col, key_t key); // equal or non-equal
-	bool RangeSelect(char* tb_name, int col, key_t left, key_t right); // range select
+	int CreateIndex(int tb_id, int col);
+	int SearchIndex(FILE* fout, int tb_id, int col, char* keys[]);
 
-	bool Project(char* tb_name, vector<int> cols);
+	int GetCmpCondition(vector<int> cols, vector<Operator> operators, char* keys[], char*& low, char*& high);
+
+	bool TableScan(int tb_id);
+	bool SingleSelect(int tb_id, vector<int> cols, vector<Operator> operators, char* keys[]); // four types of select with one column
+	bool MultiSelect(int tb_id, int condition_num, vector<int> cols, vector<Operator> operators, char* keys[]);
+	bool ESelect(int tb_id, int col, key_t key); // equal or non-equal
+	bool RangeSelect(int tb_id, int col, key_t left, key_t right); // range select
+
+	bool Project(int tb_id, vector<int> cols);
+	bool Project(FILE* fout, int tb_id, vector<int> cols);
 
 	bool LoopJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
 	bool SortJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
@@ -66,7 +72,7 @@ public:
 	bool ESelect(int col, key_t key); // equal or non-equal
 	bool RangeSelect(int col, key_t left, key_t right); // range select
 
-	bool Project(vector<int> cols);
+	bool Project(StorageManagement* storage_manager, vector<int> cols);
 
 	bool LoopJoin(Table* right_table, vector<int> cols); // equal an non-equal
 	bool SortJoin(Table* right_table, vector<int> cols); // equal an non-equal
