@@ -25,12 +25,12 @@ public:
 private:
 	static int decode_int(const char* buf, uint32_t len, int64_t* out);
 	static int decode_float(const char* buf, uint32_t len, float* out);
-	static int decode_char(const char* buf, uint32_t len, char* out);
+	static int decode_char(const char* buf, uint32_t len, char* out, uint32_t* strLen);
 	static int decode_varchar(const char* buf, uint32_t len, char* out, uint32_t* strLen);
 	static int decode_date(const char* buf, uint32_t len, int64_t* out);
 	static int encode_int(const int64_t* value, char* out, uint32_t* strLen);
 	static int encode_float(const float* value, char* out, uint32_t* strLen);
-	static int encode_char(const char* value, char* out, uint32_t* strLen);
+	static int encode_char(const char* value, char* out, uint32_t* strLen, int32_t len);
 	static int encode_varchar(const char* value, char* out, uint32_t* strLen, uint32_t len);
 	static int encode_date(const int64_t* value, char* out, uint32_t* strLen);
 };
@@ -44,7 +44,7 @@ int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uin
         case Float:
             return decode_float(buf, len, (float*)out);
         case Char:
-            return decode_char(buf, len, (char*)out);
+            return decode_char(buf, len, (char*)out, strLen);
         case Varchar:
             return decode_varchar(buf, len, (char*)out, strLen);
         case Date:
@@ -61,7 +61,7 @@ int Encoder::encode(const void* value, char* out, uint32_t* strLen, AttrType typ
         case Float:
             return encode_float((float*)value, out, strLen);
         case Char:
-            return encode_char((char*)value, out, strLen);
+            return encode_char((char*)value, out, strLen, len);
         case Varchar:
             return encode_varchar((char*)value, out, strLen, len);
         case Date:
@@ -90,10 +90,12 @@ int Encoder::decode_float(const char* buf, uint32_t len, float* out){
     return 0;
 }
 int Encoder::decode_char(const char* buf, uint32_t len, char* out){
-    if(len != 1){
+    if(len >= MAX_VARCHAR_LENGTH){
         return -1;
     }
-    *out = *buf;
+    *strLen = len;
+    strncpy(out, buf, len);
+    out[len] = '\0';
     return 0;
 }
 int Encoder::decode_varchar(const char* buf, uint32_t len, char* out, uint32_t* strLen){
@@ -126,8 +128,9 @@ int Encoder::encode_float(const float* value, char* out, uint32_t* strLen){
     return 0;
 }
 int Encoder::encode_char(const char* value, char* out, uint32_t* strLen){
-    *out = *value;
-    *strLen = 1;
+    *strLen = len;
+    strncpy(out, value, len);
+    out[len] = '\0';
     return 0;
 }
 int Encoder::encode_varchar(const char* value, char* out, uint32_t* strLen, uint32_t len){
@@ -142,4 +145,5 @@ int Encoder::encode_date(const int64_t* value, char* out, uint32_t* strLen){
     *strLen = strftime(out, MAX_DATE_ASCII_LENGTH, "%y-%m-%d" ,ptime) - 1 ;
     return 0;
 }
+
 
