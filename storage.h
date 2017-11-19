@@ -20,7 +20,7 @@
 using namespace std;
 
 
-#define BUFFER_SIZE		16
+#define BUFFER_SIZE		1024 * 256 // 1GB buffer (4KB per page)
 #define PAGE_SIZE		4096 //512 * 8
 #define MAX_SEG_SIZE	256 * 1024 * 4
 /*

@@ -82,7 +82,7 @@ public:
     /* abstract operations */
     int search(const key_t& key, value_t *value) const;
     int search_range(key_t *left, const key_t &right,
-                     value_t *values, size_t max, bool *next = NULL) const;
+                     value_t *values, size_t max, bool *next = NULL, Operator left_op, Operator right_op) const;
     int remove(const key_t& key);
     int insert(const key_t& key, value_t value);
     int update(const key_t& key, value_t value);

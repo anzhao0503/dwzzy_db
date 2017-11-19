@@ -153,20 +153,16 @@ int TableManagement::CreateIndex(int tb_id, int col) {
 		char* tuple;
 		tuple = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
 		memcpy(tuple, this->GetTuple(tb_id, i), MAX_TUPLE_SIZE);
-		char* col_content;
 		void* part;
-		col_content = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
-		strncpy(col_content, tuple+table.table_meta->attr_meta[index].attribute_offset, table.table_meta->attr_meta[index].attribute_length);
-		Encoder::decode(col_content, table.table_meta->attr_meta[index].attribute_length, part, table.table_meta->attr_meta[index].attribute_type);
-		database.insert(col_content,table.start_addr+i*MAX_TUPLE_SIZE);
+		Encoder::decode(tuple+table.table_meta->attr_meta[index].attribute_offset, strlen(tuple+table.table_meta->attr_meta[index].attribute_offset), part, table.table_meta->attr_meta[index].attribute_type);
+		database.insert((char*)part,table.start_addr+i*MAX_TUPLE_SIZE);
 		free(tuple);
-		free(col_content);
 	}
 	this->tables[tb_id].table_meta->attr_meta[col].attribute_index = 1;
 	return 0;
 }
 
-int TableManagement::SearchIndex(FILE* fout, int tb_id, int col, char* keys[]) {
+int TableManagement::SearchIndex(FILE* fout, int tb_id, int col, char* keys[], Operator left_op, Operator right_op) {
 	Table table = this->tables[tb_id];
 	char index_name[16];
 	sprintf(index_name, "%d", tb_id);
@@ -192,7 +188,7 @@ int TableManagement::SearchIndex(FILE* fout, int tb_id, int col, char* keys[]) {
 		value_t values[4096];
 		bool next = true;
 		while (next) {
-			int ret = database.search_range(&start, keys[1], values, 4096, &next);
+			int ret = database.search_range(&start, keys[1], values, 4096, &next, left_op, right_op);
 			if (ret < 0)
 				break;
 			for (int i = 0; i < ret; i++) {
@@ -204,10 +200,11 @@ int TableManagement::SearchIndex(FILE* fout, int tb_id, int col, char* keys[]) {
 			}
 		}
 	}
+	fclose(fout);
 	return 0;
 }
 
-int TableManagement::GetCmpCondition(vector<int> cols, vector<Operator> operators, char* keys[], char*& low, char*& high) {
+int TableManagement::GetCmpCondition(vector<int> cols, vector<Operator>& operators, char* keys[], char*& low, char*& high) {
 	if (cols.size() == 1) { // single condition equal
 		if (operators[0] == eq) {
 			return 1;
@@ -219,6 +216,8 @@ int TableManagement::GetCmpCondition(vector<int> cols, vector<Operator> operator
 			low = keys[0];
 			high = "~";
 			return 2;
+		} else if (operators[0] == nq) {
+			return 0;
 		}
 	} else if (cols.size() == 2) {
 		if (cols[0] != cols[1]) {
@@ -230,11 +229,48 @@ int TableManagement::GetCmpCondition(vector<int> cols, vector<Operator> operator
 		} else if ((operators[1] == ge || operators[1] == gt) && (operators[0] == le || operators[0] == lt)) {
 			high = keys[0];
 			low = keys[1];
+			Operator tmp = operators[1];
+			operators[1] = operators[0];
+			operators[0] = tmp;
 			return 2;
 		}
 		return -2;
 	}
 	return -1;
+}
+
+bool TableManagement::CheckTuple(int tb_id, char* tuple, vector<int> cols, vector<Operator> operators, char* keys[]) {
+	Table table = this->tables[tb_id];
+	Operator op;
+	for (int i = 0; i < cols.size(); i++) {
+		void* part;
+		Encoder::decode(tuple+table.table_meta->attr_meta[i].attribute_offset, strlen(tuple+table.table_meta->attr_meta[i].attribute_offset), part, table.table_meta->attr_meta[i].attribute_type);
+		op = operators[i];
+		if (op == eq) {
+			if (strcmp(keys[i], (char*)part) != 0) {
+				return false;
+			}
+		} else if (op == ge) {
+			if (strcmp((char*)part, keys[i]) < 0) {
+				return false;
+			}
+		} else if (op == le) {
+			if (strcmp((char*)part, keys[i]) > 0) {
+				return false;
+			}
+		} else if (op == gt) {
+			if (strcmp((char*)part, keys[i]) <= 0) {
+				return false;
+			}
+		} else if (op == lt) {
+			if (strcmp((char*)part, keys[i]) >= 0) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	return true;
 }
 
 bool TableManagement::TableScan(int tb_id) {
@@ -251,13 +287,9 @@ bool TableManagement::TableScan(int tb_id) {
 		memcpy(tuple, this->GetTuple(tb_id, i), MAX_TUPLE_SIZE);
 		// decode
 		for (int j = 0; j < table.table_meta->attribute_num; j++) {
-			char* col_content;
 			void* part;
-			col_content = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
-			strncpy(col_content, tuple+table.table_meta->attr_meta[j].attribute_offset, table.table_meta->attr_meta[j].attribute_length);
-			Encoder::decode(col_content, table.table_meta->attr_meta[j].attribute_length, part, table.table_meta->attr_meta[j].attribute_type);
-			fprintf(fout, "%s\t", col_content);
-			free(col_content);
+			Encoder::decode(tuple+table.table_meta->attr_meta[j].attribute_offset, strlen(tuple+table.table_meta->attr_meta[j].attribute_offset), part, table.table_meta->attr_meta[j].attribute_type);
+			fprintf(fout, "%s\t", part);
 		}
 		fprintf(fout, "\n");
 		free(tuple);
@@ -267,7 +299,7 @@ bool TableManagement::TableScan(int tb_id) {
 }
 
 
-bool TableManagement::SingleSelect(int tb_id, vector<int> cols, vector<Operator> operators, char* keys[]) {
+bool TableManagement::Select(int tb_id, vector<int> cols, vector<Operator> operators, char* keys[]) {
 	Table table = this->tables[tb_id];
 	if (table.table_meta->tuple_num == 0)
 		return false;
@@ -276,12 +308,28 @@ bool TableManagement::SingleSelect(int tb_id, vector<int> cols, vector<Operator>
 	int condition_count = this->GetCmpCondition(cols, operators, keys, low, high);
 	FILE* fout;
 	fout = fopen("result_tableselect", "w");
-	if (condition_count >= 1 && table.table_meta->attr_meta[cols[0]].attribute_index != -1) {
-		// condition select and has index
-		this->SearchIndex(fout, tb_id, cols[0], keys);
+	if (condition_count == 1 && table.table_meta->attr_meta[cols[0]].attribute_index != -1) {
+		// equal condition select and has index
+		this->SearchIndex(fout, tb_id, cols[0], keys, operators[0], operators[1]);
+	} else if (condition_count == 2 && table.table_meta->attr_meta[cols[0]].attribute_index != -1)  {
+		//range condition select and has index
+		char* input[2];
+		input[0] = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
+		input[1] = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
+		memcpy(input[0], low, sizeof(low));
+		memcpy(input[1], high, sizeof(high));
+		this->SearchIndex(fout, tb_id, cols[0], input, operators[0], operators[1]);
 	} else {
-		// without conditions
-		this->Project(fout, tb_id, cols);
+		// no index or without conditions or non-equal condition or multiple conditions
+		for (int i = 0; i < table.table_meta->tuple_num; i++) {
+			char* tuple;
+			tuple = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
+			memcpy(tuple, this->GetTuple(tb_id, i), MAX_TUPLE_SIZE);
+			if (this->CheckTuple(tb_id, tuple, cols, operators, keys)) {
+				fprintf(fout, "%s\n", tuple);
+			}
+		}
+		fclose(fout);
 	}
 	return true;
 }
@@ -302,13 +350,9 @@ bool TableManagement::Project(int tb_id, vector<int> cols) {
 			memcpy(tuple, this->GetTuple(tb_id, i), MAX_TUPLE_SIZE);
 			// decode
 			for (int j = 0; j < table.table_meta->attribute_num; j++) {
-				char* col_content;
 				void* part;
-				col_content = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
-				strncpy(col_content, tuple+table.table_meta->attr_meta[j].attribute_offset, table.table_meta->attr_meta[j].attribute_length);
-				Encoder::decode(col_content, table.table_meta->attr_meta[j].attribute_length, part, table.table_meta->attr_meta[j].attribute_type);
-				fprintf(fout, "%s\t", col_content);
-				free(col_content);
+				Encoder::decode(tuple+table.table_meta->attr_meta[j].attribute_offset, strlen(tuple+table.table_meta->attr_meta[j].attribute_offset), part, table.table_meta->attr_meta[j].attribute_type);
+				fprintf(fout, "%s\t", part);
 			}
 			fprintf(fout, "\n");
 			free(tuple);
@@ -320,14 +364,11 @@ bool TableManagement::Project(int tb_id, vector<int> cols) {
 			memcpy(tuple, this->GetTuple(tb_id, i), MAX_TUPLE_SIZE);
 			// decode
 			for (int j = 0; j < cols.size(); j++) {
-				char* col_content;
 				int col = cols[j];
 				void* part;
-				col_content = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
-				strncpy(col_content, tuple+table.table_meta->attr_meta[col].attribute_offset, table.table_meta->attr_meta[col].attribute_length);
-				Encoder::decode(col_content, table.table_meta->attr_meta[col].attribute_length, part, table.table_meta->attr_meta[col].attribute_type);
-				fprintf(fout, "%s\t", col_content);
-				free(col_content);
+				part = malloc(MAX_TUPLE_SIZE);
+				Encoder::decode(tuple+table.table_meta->attr_meta[col].attribute_offset, strlen(tuple+table.table_meta->attr_meta[col].attribute_offset), part, table.table_meta->attr_meta[col].attribute_type);
+				fprintf(fout, "%s\t", part);
 			}
 			fprintf(fout, "\n");
 			free(tuple);
@@ -351,13 +392,9 @@ bool TableManagement::Project(FILE* fout, int tb_id, vector<int> cols) {
 			memcpy(tuple, this->GetTuple(tb_id, i), MAX_TUPLE_SIZE);
 			// decode
 			for (int j = 0; j < table.table_meta->attribute_num; j++) {
-				char* col_content;
 				void* part;
-				col_content = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
-				strncpy(col_content, tuple+table.table_meta->attr_meta[j].attribute_offset, table.table_meta->attr_meta[j].attribute_length);
-				Encoder::decode(col_content, table.table_meta->attr_meta[j].attribute_length, part, table.table_meta->attr_meta[j].attribute_type);
-				fprintf(fout, "%s\t", col_content);
-				free(col_content);
+				Encoder::decode(tuple+table.table_meta->attr_meta[j].attribute_offset, strlen(tuple+table.table_meta->attr_meta[j].attribute_offset), part, table.table_meta->attr_meta[j].attribute_type);
+				fprintf(fout, "%s\t", part);
 			}
 			fprintf(fout, "\n");
 			free(tuple);
@@ -369,14 +406,11 @@ bool TableManagement::Project(FILE* fout, int tb_id, vector<int> cols) {
 			memcpy(tuple, this->GetTuple(tb_id, i), MAX_TUPLE_SIZE);
 			// decode
 			for (int j = 0; j < cols.size(); j++) {
-				char* col_content;
 				int col = cols[j];
 				void* part;
-				col_content = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
-				strncpy(col_content, tuple+table.table_meta->attr_meta[col].attribute_offset, table.table_meta->attr_meta[col].attribute_length);
-				Encoder::decode(col_content, table.table_meta->attr_meta[col].attribute_length, part, table.table_meta->attr_meta[col].attribute_type);
-				fprintf(fout, "%s\t", col_content);
-				free(col_content);
+
+				Encoder::decode(tuple+table.table_meta->attr_meta[col].attribute_offset, strlen(tuple+table.table_meta->attr_meta[col].attribute_offset), part, table.table_meta->attr_meta[col].attribute_type);
+				fprintf(fout, "%s\t", part);
 			}
 			fprintf(fout, "\n");
 			free(tuple);
