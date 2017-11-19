@@ -13,3 +13,9 @@ MetaInfo::MetaInfo() {
 MetaInfo::~MetaInfo() {
 	delete db_meta;
 }
+
+int TypeMalloc(void* p, AttrType t){
+	switch(t){
+	
+	}
+}
