@@ -32,15 +32,15 @@ int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uin
     //Todo
     //if(...)return -1
     switch(type){
-        case Integer:
+        case INTEGER:
             return decode_int(buf, len, (int64_t*)out);
-        case Float:
+        case FLOAT:
             return decode_float(buf, len, (float*)out);
-        case Char:
+        case CHAR:
             return decode_char(buf, len, (char*)out, strLen);
-        case Varchar:
+        case VARCHAR:
             return decode_varchar(buf, len, (char*)out, strLen);
-        case Date:
+        case DATE:
             return decode_date(buf, len, (int64_t*)out);
     }
     return -1;
@@ -49,15 +49,15 @@ int Encoder::encode(const void* value, char* out, uint32_t* strLen, AttrType typ
     //Todo
     //if(...)return -1
     switch(type){
-        case Integer:
+        case INTEGER:
             return encode_int((int64_t*)value, out, strLen);
-        case Float:
+        case FLOAT:
             return encode_float((float*)value, out, strLen);
-        case Char:
+        case CHAR:
             return encode_char((char*)value, out, strLen, len);
-        case Varchar:
+        case VARCHAR:
             return encode_varchar((char*)value, out, strLen, len);
-        case Date:
+        case DATE:
             return encode_date((int64_t*)value, out, strLen);
     }
     return -1;
