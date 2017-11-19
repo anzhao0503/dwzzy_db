@@ -3,20 +3,13 @@
 #include <cstring>
 #include <stdint.h>
 #include <time.h>
+#include <meta_info.h>
 #define MAX_INT_ASCII_LENGTH 24
 #define MAX_FLOAT_ASCII_LENGTH 24
 #define MAX_DATE_ASCII_LENGTH 12
 #define MAX_VARCHAR_LENGTH 256
 
 using namespace std;
-
-enum AttrType {
-	Integer,
-	Float,
-	Char,
-	Varchar,
-	Date
-};
 
 class Encoder {
 public:
