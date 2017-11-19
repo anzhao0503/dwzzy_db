@@ -85,6 +85,8 @@ public:
 	}
 };
 
+int TypeMalloc(void*& p, AttrType t, int len = 0);
+
 // global variable
 extern MetaInfo meta_info;
 #endif /* META_INFO_H_ */

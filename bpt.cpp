@@ -99,9 +99,9 @@ int bplus_tree::search_range(key_t *left, const key_t &right,
 
         // start point
         if (off_left == off) {
-        	if (left_op == ge || left_op == le)
+        	if (left_op == ge)
         		 b = find(leaf, *left);
-        	else if (left_op == lt || left_op == gt)
+        	else if (left_op == gt)
         		b = find1(leaf, *left);
         }
 
@@ -121,9 +121,9 @@ int bplus_tree::search_range(key_t *left, const key_t &right,
         map(&leaf, off_right);
 
         b = find(leaf, *left);
-        if (right_op == le || right_op == ge){
+        if (right_op == le){
         	e = upper_bound(begin(leaf), end(leaf), right);
-        } else if (right_op == lt || right_op == gt) {
+        } else if (right_op == lt) {
         	e = lower_bound(begin(leaf), end(leaf), right);
         }
         for (; b != e && i < max; ++b, ++i)

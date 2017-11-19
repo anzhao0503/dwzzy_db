@@ -8,6 +8,9 @@
 #include "encoder.cpp"
 #include "predefined.h"
 #include <vector>
+#include <math.h>
+
+#define EPSILON 0.00000001
 
 typedef int value_t;
 enum Operator {
@@ -33,8 +36,9 @@ public:
 
 	int CreateIndex(int tb_id, int col);
 	int SearchIndex(FILE* fout, int tb_id, int col, char* keys[], Operator left_op, Operator right_op); // Index select
+	bool GetTupleIndex(int tb_id, int col, char* keys[], Operator left_op, Operator right_op, char* result[]);
 
-	int GetCmpCondition(vector<int> cols, vector<Operator>& operators, char* keys[], char*& low, char*& high);
+	int GetCmpCondition(vector<int> cols, vector<Operator>& operators, char* keys[], char* low, char* high);
 	bool CheckTuple(int tb_id, char* tuple, vector<int> cols, vector<Operator> operators, char* keys[]);
 	bool TableScan(int tb_id);
 	bool Select(int tb_id, vector<int> cols, vector<Operator> operators, char* keys[]); // four types of select with one column
@@ -42,13 +46,13 @@ public:
 	bool Project(int tb_id, vector<int> cols);
 	bool Project(FILE* fout, int tb_id, vector<int> cols);
 
-	bool LoopJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
-	bool SortJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
-	bool HashJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
-	bool IndexJoin(char* left_tb_name, Table* right_tb_name, vector<int> cols); // equal an non-equal
-	bool ThreeJoin(char* tb_name_1, char* tb_name_2, char* tb_name_3, vector<int> cols);
-	bool ProductLoopJoin(char* left_tb_name, Table* right_tb_name,);
-	bool ProductIndexJoin(char* left_tb_name, Table* right_tb_name,);
+	bool LoopJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal and non-equal
+	bool SortJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal and non-equal
+	bool HashJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal and non-equal
+	bool IndexJoin(int left_tb_id, int right_tb_id, vector<int> cols1, vector<int> cols2, vector<Operator> operators, bool isReverse); // equal and non-equal
+	bool ThreeJoin(int tb_id_1, int tb_id_2, int tb_id_3, vector<int> cols);
+	bool ProductLoopJoin(int left_tb_id, int right_tb_id);
+	bool ProductIndexJoin(int left_tb_id, int right_tb_id);
 };
 
 class Table {
