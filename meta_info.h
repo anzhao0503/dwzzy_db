@@ -29,6 +29,15 @@ enum AttrType {
 	DATE
 };
 
+enum Operator {
+	eq,
+	nq,
+	lt,
+	le,
+	gt,
+	ge
+};
+
 class AttributeMeta {
 public:
 	char attribute_name[MAX_ATTR_NAME_LENGTH];
@@ -51,13 +60,12 @@ public:
 	ADDR start_addr;
 	int attribute_num;
 	int tuple_num;
-	vector<AttributeMeta> attr_meta;
+	vector<AttributeMeta*> attr_meta;
 	TableMeta() {
 		db_id = -1;
 		start_addr = -1;
 		attribute_num = 0;
 		tuple_num = 0;
-		attr_meta = new vector<AttributeMeta>(MAX_ATTR_NUM);
 	}
 };
 
@@ -65,11 +73,10 @@ class DBMeta {
 public:
 	ADDR seg_id;
 	int table_num;
-	vector<TableMeta> table_meta;
+	vector<TableMeta*> table_meta;
 	DBMeta() {
 		seg_id = -1;
 		table_num = 0;
-		table_meta = new vector<TableMeta>(MAX_TABLE_NUM);
 	}
 	~DBMeta() {
 	}
@@ -78,14 +85,14 @@ public:
 class MetaInfo {
 public:
 	int db_num;
-	vector<DBMeta> db_meta;
+	vector<DBMeta*> db_meta;
 	MetaInfo() {
 		db_num = 0;
-		db_meta = new vector<DBMeta>(MAX_DB_NUM);
 	}
+	~MetaInfo();
 };
 
-int TypeMalloc(void*& p, AttrType t, int len = 0);
+int TypeMalloc(void*& p, AttrType t, int len);
 
 // global variable
 extern MetaInfo meta_info;

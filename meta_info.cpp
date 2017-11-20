@@ -1,21 +1,6 @@
-/*
- * meta_info.cpp
- *
- *  Created on: Nov 15, 2017
- *      Author: anzhao
- */
-# include "meta_info.h"
+#include "meta_info.h"
 
-MetaInfo::MetaInfo() {
-	db_meta = new DBMeta();
-}
-
-MetaInfo::~MetaInfo() {
-	delete db_meta;
-}
-
-<<<<<<< HEAD
-int TypeMalloc(void*& p, AttrType t, int len = 0){
+int TypeMalloc(void*& p, AttrType t, int len){
 	switch(t){
 		case INTEGER:
 			p = (int64_t*)malloc(sizeof(int64_t));
@@ -33,10 +18,4 @@ int TypeMalloc(void*& p, AttrType t, int len = 0){
 			p = (char*)malloc(sizeof(char)*len);
 	}
 	return 0;
-=======
-int TypeMalloc(void* p, AttrType t){
-	switch(t){
-	
-	}
->>>>>>> c6f34b65ae5eb006d968731e6348200745dd310b
 }

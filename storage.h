@@ -276,14 +276,14 @@ private:
 	 */
 	SegmentTable segment_table; //user define the number of segs, 1 seg by default
 	FrameTable frame_table;
-	AddressSpace addr_space = AddressSpace(0);
+
 
 	/*
 	 * parse address
 	 */
 
 	ADDR GetSegId(ADDR virtual_addr);
-	ADDR GetOffset(ADDR virtual_addr);
+
 	/*
 	 * Given address, load & write page
 	 */
@@ -295,8 +295,9 @@ public:
 	int fd; //for file operations
 	BufferTableItem  buffer_table[BUFFER_SIZE];
 	Frame buffer[BUFFER_SIZE];
+	AddressSpace addr_space = AddressSpace(0);
 	ADDR GetPageId(ADDR virtual_addr);
-
+	ADDR GetOffset(ADDR virtual_addr);
 	StorageManagement();
 	~StorageManagement();
 

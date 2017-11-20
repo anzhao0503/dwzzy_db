@@ -82,7 +82,7 @@ int bplus_tree::search(const key_t& key, value_t *value) const
 }
 
 int bplus_tree::search_range(key_t *left, const key_t &right,
-                             value_t *values, size_t max, bool *next, Operator left_op, Operator right_op) const
+                             value_t *values, size_t max, Operator left_op, Operator right_op, bool *next) const
 {
     if (left == NULL || keycmp(*left, right) > 0)
         return -1;

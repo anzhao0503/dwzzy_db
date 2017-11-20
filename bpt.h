@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-
+#include "meta_info.h"
 #ifndef UNIT_TEST
 #include "predefined.h"
 #else
@@ -82,7 +82,7 @@ public:
     /* abstract operations */
     int search(const key_t& key, value_t *value) const;
     int search_range(key_t *left, const key_t &right,
-                     value_t *values, size_t max, bool *next = NULL, Operator left_op, Operator right_op) const;
+                     value_t *values, size_t max, Operator left_op, Operator right_op,  bool *next = NULL) const;
     int remove(const key_t& key);
     int insert(const key_t& key, value_t value);
     int update(const key_t& key, value_t value);
