@@ -1,34 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <cstring>
-#include <stdint.h>
-#include <time.h>
-#include <meta_info.h>
-#define MAX_INT_ASCII_LENGTH 24
-#define MAX_FLOAT_ASCII_LENGTH 24
-#define MAX_DATE_ASCII_LENGTH 12
-#define MAX_VARCHAR_LENGTH 256
+#include "encoder.h"
 
-using namespace std;
-
-class Encoder {
-public:
-	static int decode(const char* buf, uint32_t len, void* out, AttrType type, uint32_t* strLen = NULL);
-	static int encode(const void* value, char* out, uint32_t* strLen, AttrType type, uint32_t len = 0);
-private:
-	static int decode_int(const char* buf, uint32_t len, int64_t* out);
-	static int decode_float(const char* buf, uint32_t len, float* out);
-	static int decode_char(const char* buf, uint32_t len, char* out, uint32_t* strLen);
-	static int decode_varchar(const char* buf, uint32_t len, char* out, uint32_t* strLen);
-	static int decode_date(const char* buf, uint32_t len, int64_t* out);
-	static int encode_int(const int64_t* value, char* out, uint32_t* strLen);
-	static int encode_float(const float* value, char* out, uint32_t* strLen);
-	static int encode_char(const char* value, char* out, uint32_t* strLen, int32_t len);
-	static int encode_varchar(const char* value, char* out, uint32_t* strLen, uint32_t len);
-	static int encode_date(const int64_t* value, char* out, uint32_t* strLen);
-};
-
-int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uint32_t* strLen = NULL){
+int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uint32_t* strLen){
     //Todo
     //if(...)return -1
     switch(type){
@@ -45,7 +17,7 @@ int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uin
     }
     return -1;
 }
-int Encoder::encode(const void* value, char* out, uint32_t* strLen, AttrType type, uint32_t len = 0){
+int Encoder::encode(const void* value, char* out, uint32_t* strLen, AttrType type, uint32_t len){
     //Todo
     //if(...)return -1
     switch(type){
@@ -82,7 +54,7 @@ int Encoder::decode_float(const char* buf, uint32_t len, float* out){
     *out = (float)atof(asc_str);
     return 0;
 }
-int Encoder::decode_char(const char* buf, uint32_t len, char* out){
+int Encoder::decode_char(const char* buf, uint32_t len, char* out, uint32_t* strLen){
     if(len >= MAX_VARCHAR_LENGTH){
         return -1;
     }
@@ -120,7 +92,7 @@ int Encoder::encode_float(const float* value, char* out, uint32_t* strLen){
     *strLen = sprintf(out, "%f", *value);
     return 0;
 }
-int Encoder::encode_char(const char* value, char* out, uint32_t* strLen){
+int Encoder::encode_char(const char* value, char* out, uint32_t* strLen, uint32_t len){
     *strLen = len;
     strncpy(out, value, len);
     out[len] = '\0';
@@ -138,5 +110,3 @@ int Encoder::encode_date(const int64_t* value, char* out, uint32_t* strLen){
     *strLen = strftime(out, MAX_DATE_ASCII_LENGTH, "%y-%m-%d" ,ptime) - 1 ;
     return 0;
 }
-
-
