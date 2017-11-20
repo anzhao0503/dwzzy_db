@@ -60,6 +60,7 @@ public:
 	ADDR start_addr;
 	int attribute_num;
 	int tuple_num;
+	char data_file_path[128];
 	vector<AttributeMeta*> attr_meta;
 	TableMeta() {
 		db_id = -1;
@@ -89,11 +90,11 @@ public:
 	MetaInfo() {
 		db_num = 0;
 	}
-	~MetaInfo();
+	~MetaInfo() {
+	}
 };
 
 int TypeMalloc(void*& p, AttrType t, int len);
-
 // global variable
-extern MetaInfo meta_info;
+extern MetaInfo* meta_info;
 #endif /* META_INFO_H_ */

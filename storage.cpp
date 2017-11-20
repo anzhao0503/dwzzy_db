@@ -398,7 +398,7 @@ void Page::ResetPage(){
 int Frame::FlushFrame(const void *buf,int fd){
 	off_t offset = this->frame_id * PAGE_SIZE;
 	if(lseek(fd,offset,SEEK_SET) != -1){
-		write(fd,buf,PAGE_SIZE);
+		// write(fd,buf,PAGE_SIZE);
 		return 0;
 	}
 	return -1;

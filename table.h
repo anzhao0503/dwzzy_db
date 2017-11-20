@@ -47,8 +47,8 @@ public:
 	bool Project(FILE* fout, int tb_id, vector<int> cols);
 
 	bool LoopJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal and non-equal
-	bool SortJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal and non-equal
-	bool HashJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal and non-equal
+	bool SortJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal
+	bool HashJoin(int left_tb_id, int right_tb_id, vector<int> cols); // equal
 	bool SingleIndexJoin(int right_tb_id, int col2, char* keys[], Operator op, char* result[]);
 	bool IndexJoin(int left_tb_id, int right_tb_id, vector<int> cols1, vector<int> cols2, vector<Operator> operators, bool isReverse); // equal and non-equal
 	bool ThreeJoin(int tb_id_1, int tb_id_2, int tb_id_3, vector<int> cols);

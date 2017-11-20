@@ -1,5 +1,6 @@
 #include "meta_info.h"
 
+MetaInfo* meta_info = new MetaInfo();
 int TypeMalloc(void*& p, AttrType t, int len){
 	switch(t){
 		case INTEGER:

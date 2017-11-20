@@ -13,8 +13,8 @@ using namespace std;
 
 class Encoder {
 public:
-	static int decode(const char* buf, uint32_t len, void* out, AttrType type, uint32_t* strLen);
-	static int encode(const void* value, char* out, uint32_t* strLen, AttrType type, uint32_t len);
+	static int decode(const char* buf, uint32_t len, void* out, AttrType type, uint32_t* strLen = NULL);
+	static int encode(const void* value, char* out, uint32_t* strLen, AttrType type, uint32_t len = 0);
 private:
 	static int decode_int(const char* buf, uint32_t len, int64_t* out);
 	static int decode_float(const char* buf, uint32_t len, float* out);

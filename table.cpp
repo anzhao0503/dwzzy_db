@@ -16,7 +16,7 @@ TableManagement::~TableManagement() {
 int TableManagement::InitTable(char* tb_name, int db_id, int index, bool exist) {
 	FILE* fp;
 	if ((fp = fopen("benchmark_format.txt", "r")) == NULL) {
-		cout<<"error"<<endl;
+		cout<<"error find format"<<endl;
 		return -1;
 	}
 	AttrType *types;
@@ -29,7 +29,7 @@ int TableManagement::InitTable(char* tb_name, int db_id, int index, bool exist) 
 	   char seg[] = " ";
 	   char* substr;
 	   substr = strtok(buffer, seg);
-	   if (strcpy(substr, tb_name) == 0) {
+	   if (strcmp(substr, tb_name) == 0) {
 		   // get table meta data
 		   substr = strtok(NULL, seg);
 		   int attr_num = atoi(substr);
@@ -42,17 +42,17 @@ int TableManagement::InitTable(char* tb_name, int db_id, int index, bool exist) 
 			   substr = strtok(NULL, seg);
 			   substr = strtok(NULL, seg);
 			   AttrType type;
-			   if (strcpy(substr, "INTEGER") == 0) {
+			   if (strcmp(substr, "INTEGER") == 0) {
 				   type = INTEGER;
 				   attr_len = 24;
-			   } else if (strcpy(substr, "FLOAT") == 0) {
+			   } else if (strcmp(substr, "FLOAT") == 0) {
 				   type = FLOAT;
 				   attr_len = 24;
-			   } else if (strcpy(substr, "CHAR") == 0) {
+			   } else if (strcmp(substr, "CHAR") == 0) {
 				   type = CHAR;
-			   } else if (strcpy(substr, "VARCHAR") == 0) {
+			   } else if (strcmp(substr, "VARCHAR") == 0) {
 				   type = VARCHAR;
-			   } else if (strcpy(substr, "DATE") == 0) {
+			   } else if (strcmp(substr, "DATE") == 0) {
 				   type = DATE;
 				   attr_len = 12;
 			   }
@@ -70,33 +70,37 @@ int TableManagement::InitTable(char* tb_name, int db_id, int index, bool exist) 
 		   ADDR start_addr = this->storage_manager->addr_space.GetCurrentAddr();
 		   FILE* fp1;
 		   if ((fp1 = fopen(tb_name, "r")) == NULL) {
-		   		cout<<"error"<<endl;
+		   		cout<<"error find saved file"<<endl;
 		   		return -1;
-		   	}
+		   }
 		   char buf[MAX_TUPLE_SIZE+1];
 		   int tuple_num = 0;
 		   while (!feof(fp1)) {
-			   fgets(buf, sizeof(buf), fp);
+			   fgets(buf, sizeof(buf), fp1);
 			   char* input = (char*)calloc(sizeof(char)*MAX_TUPLE_SIZE+1, sizeof(char));
 			   char seg1[] = "|";
 			   char* substr1;
 			   char* part;
 			   int j = 0;
+			   substr1 = strtok(buf, seg1);
 			   while (j < attribute_num) {
 				   uint32_t strLen;
-				   substr1 = strtok(buf, seg1);
 				   part = (char*)malloc(MAX_TUPLE_SIZE);
 				   int res = Encoder::encode((const void*)substr1, part, &strLen, types[j], attr_length[j]);
+				   cout << part << endl;
 				   if (res != -1) {
 					   strcat(input, part);
 				   }
 				   free(part);
 				   j++;
+				   substr1 = strtok(NULL, seg1);
 			   }
+			   break;
 			   this->storage_manager->Write(input, MAX_TUPLE_SIZE);
 			   tuple_num += 1;
 			   free(input);
 		   }
+		   fclose(fp1);
 		   Table* new_table = new Table(tb_name, db_id, index, seg_id, start_addr, exist, types, attr_length, attribute_num);
 		   new_table->table_meta->tuple_num = tuple_num;
 		   this->tables.insert((vector<Table*>::iterator)this->tables.begin()+index, new_table);
@@ -386,19 +390,19 @@ bool TableManagement::TableScan(int tb_id) {
 }
 
 bool TableManagement::IndexScan(int tb_id) {
-	char index_name[16];
-	sprintf(index_name, "%d", tb_id);
-	strcat(index_name, "_");
-	char* tmp;
-	strcat(index_name, "0");
-	strcat(index_name, ".index");
-	std::ifstream fin(index_name, std::ios::binary);
-
-	int key;
-	int value;
-
-	fin.read((char*)&key, sizeof(int));
-	fin.read((char*)&key, sizeof(int));
+	Table* table = this->tables[tb_id];
+	if (table->table_meta->tuple_num == 0)
+		return false;
+	FILE* fout;
+	fout = fopen("result_indexscan", "w");
+	if (!fout)
+		return false;
+	char* keys[2];
+	keys[0] = (char*)malloc(sizeof(char)*5);
+	keys[0] = "!";
+	keys[0] = (char*)malloc(sizeof(char)*5);
+	keys[1] = "~";
+	this->SearchIndex(fout, tb_id, 0, keys, ge, le);
 	return true;
 }
 
@@ -602,11 +606,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < right_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple2+right_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuple2+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple2+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col2) {
+								void* part;
+								TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple2+right_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuple2+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple2+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					} else {
@@ -618,11 +624,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < left_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col1) {
+								void* part;
+								TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					}
@@ -645,11 +653,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < right_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col2) {
+								void* part;
+								TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					} else {
@@ -661,11 +671,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < left_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col1) {
+								void* part;
+								TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					}
@@ -688,11 +700,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < right_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col2) {
+								void* part;
+								TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					} else {
@@ -704,11 +718,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < left_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col1) {
+								void* part;
+								TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					}
@@ -732,11 +748,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < right_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col2) {
+								void* part;
+								TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					} else {
@@ -748,11 +766,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < left_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col1) {
+								void* part;
+								TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					}
@@ -771,11 +791,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < right_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result2[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(result2[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result2[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col2) {
+								void* part;
+								TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result2[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(result2[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result2[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					} else {
@@ -787,11 +809,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < left_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col1) {
+								void* part;
+								TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					}
@@ -853,11 +877,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < right_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(tuples1[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuples1[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuples1[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col2) {
+								void* part;
+								TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(tuples1[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuples1[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuples1[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					} else {
@@ -869,11 +895,13 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 							free(part);
 						}
 						for (int k = 0; k < left_table->table_meta->attribute_num; k++) {
-							void* part;
-							TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
-							Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
-							fprintf(fout, "%s\t", part);
-							free(part);
+							if (k != col1) {
+								void* part;
+								TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
+								Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
+								fprintf(fout, "%s\t", part);
+								free(part);
+							}
 						}
 						fprintf(fout, "\n");
 					}
@@ -881,6 +909,52 @@ bool TableManagement::IndexJoin(int left_tb_id, int right_tb_id, vector<int> col
 			}
 		}
 
+	}
+	return true;
+}
+
+bool TableManagement::ProductIndexJoin(int left_tb_id, int right_tb_id) {
+	Table* left_table = this->tables[left_tb_id];
+	Table* right_table = this->tables[right_tb_id];
+	if (left_table->table_meta->tuple_num == 0 || right_table->table_meta->tuple_num == 0) {
+		return false;
+	}
+	FILE* fout;
+	fout = fopen("result_productindexjoin", "w");
+	if (!fout)
+		return false;
+	for (int i = 0; i < left_table->table_meta->tuple_num; i++) {
+		char* tuple1;
+		tuple1 = (char*)malloc(sizeof(char)*MAX_TUPLE_SIZE);
+		memcpy(tuple1, this->GetTuple(left_tb_id, i), MAX_TUPLE_SIZE);
+		// decode
+		void* part;
+		TypeMalloc(part, left_table->table_meta->attr_meta[0]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[0]->attribute_offset));
+		Encoder::decode(tuple1+left_table->table_meta->attr_meta[0]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[0]->attribute_offset), part, left_table->table_meta->attr_meta[0]->attribute_type);
+		char* keys[2];
+		keys[0] = (char*)malloc(sizeof(char)*5);
+		keys[0] = "!";
+		keys[0] = (char*)malloc(sizeof(char)*5);
+		keys[1] = "~";
+		char* result1[4096];
+		this->GetTupleIndex(right_tb_id, 0, keys, ge, le, result1);
+		for (int j = 0; j < sizeof(result1) / MAX_TUPLE_SIZE; j++) {
+			for (int k = 0; k < left_table->table_meta->attribute_num; k++) {
+				void* part;
+				TypeMalloc(part, left_table->table_meta->attr_meta[k]->attribute_type, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset));
+				Encoder::decode(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset, strlen(tuple1+left_table->table_meta->attr_meta[k]->attribute_offset), part, left_table->table_meta->attr_meta[k]->attribute_type);
+				fprintf(fout, "%s\t", part);
+				free(part);
+			}
+			for (int k = 0; k < right_table->table_meta->attribute_num; k++) {
+				void* part;
+				TypeMalloc(part, right_table->table_meta->attr_meta[k]->attribute_type, strlen(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset));
+				Encoder::decode(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset, strlen(result1[j]+right_table->table_meta->attr_meta[k]->attribute_offset), part, right_table->table_meta->attr_meta[k]->attribute_type);
+				fprintf(fout, "%s\t", part);
+				free(part);
+			}
+			fprintf(fout, "\n");
+		}
 	}
 	return true;
 }
@@ -907,24 +981,21 @@ Table::Table(char* name, int db_id, int index, ADDR seg_id, ADDR start_addr, boo
 			new_table_meta->attr_meta.push_back(new_attr_meta);
 		}
 		this->table_meta = new_table_meta;
-		if (meta_info.db_meta.size() <= db_id) {
+		if (meta_info->db_meta.size() <= db_id) {
 			// database not exists
 			DBMeta* new_db_meta = new DBMeta();
 			new_db_meta->seg_id = seg_id;
 			new_db_meta->table_num = 1;
 			new_db_meta->table_meta.push_back(new_table_meta);
-			meta_info.db_meta.insert((vector<DBMeta*>::iterator)meta_info.db_meta.begin()+db_id, new_db_meta);
-			meta_info.db_meta[db_id]->table_num = 1;
+			meta_info->db_meta.insert((vector<DBMeta*>::iterator)meta_info->db_meta.begin()+db_id, new_db_meta);
+			meta_info->db_meta[db_id]->table_num = 1;
 		} else {
-			meta_info.db_meta[db_id]->table_meta.insert((vector<TableMeta*>::iterator)meta_info.db_meta[db_id]->table_meta.begin()+index, new_table_meta);
-			meta_info.db_meta[db_id]->table_num++;
+			meta_info->db_meta[db_id]->table_meta.insert((vector<TableMeta*>::iterator)meta_info->db_meta[db_id]->table_meta.begin()+index, new_table_meta);
+			meta_info->db_meta[db_id]->table_num++;
 		}
 	}
 	else {
-		this->table_meta = meta_info.db_meta[db_id]->table_meta[index];
+		this->table_meta = meta_info->db_meta[db_id]->table_meta[index];
 	}
 }
 
-int main() {
-	return 0;
-}

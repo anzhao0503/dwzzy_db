@@ -1,6 +1,6 @@
 #include "encoder.h"
 
-int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uint32_t* strLen = NULL){
+int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uint32_t* strLen){
     //Todo
     //if(...)return -1
     switch(type){
@@ -17,7 +17,7 @@ int Encoder::decode(const char* buf, uint32_t len, void* out, AttrType type, uin
     }
     return -1;
 }
-int Encoder::encode(const void* value, char* out, uint32_t* strLen, AttrType type, uint32_t len = 0){
+int Encoder::encode(const void* value, char* out, uint32_t* strLen, AttrType type, uint32_t len){
     //Todo
     //if(...)return -1
     switch(type){
