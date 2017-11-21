@@ -19,10 +19,12 @@
 
 using namespace std;
 
-
-#define BUFFER_SIZE		1024 * 256 // 1GB buffer (4KB per page)
-#define PAGE_SIZE		4096 //512 * 8
+#define BUFFER_SIZE		1024 * 256 // page num in buffer(1GB buffer)
+//#define BUFFER_SIZE		1024 * 256 // page num in buffer(1GB buffer)
+#define PAGE_SIZE		4096 // 512 * 8
 #define MAX_SEG_SIZE	256 * 1024 * 4
+#define N_BLOCK 32 // number of blocks
+#define BLOCK_SIZE 1024 * 256 / 32 // page num per block
 /*
  * address space 8M
  * per tuple 512B
@@ -261,15 +263,33 @@ public:
 	BufferTableItem(int index);
 };
 
+class BlockTableItem {
+public:
+	int index; //index in block table
+	ADDR virtual_addr;
+	bool in_buffer;
+	// whether need to write back to disk when swaped out
+	bool is_written;
+	// flags used in NRU
+	bool U;
+	bool M;
+	BlockTableItem();
+	BlockTableItem(int index);
+};
+
 class StorageManagement {
 private:
 	/*
 	 * buffer management
 	 */
-	int last_used; //last position of pointer in NRU
+	int last_used; //last page's position of pointer in NRU
+	int last_used_block; // last block's position of pointer in NRU
 	void InitBufferTable();
+	void InitBlockTable();
 	int HitBuffer(ADDR virtual_addr);
+	int HitBlock(ADDR virtual_addr);
 	BufferTableItem* NRU(BufferTableItem* buffer_table);
+	BlockTableItem* NRU(BlockTableItem* block_table, BufferTableItem* buffer_table);
 
 	/*
 	 * address management
@@ -283,7 +303,8 @@ private:
 	 */
 
 	ADDR GetSegId(ADDR virtual_addr);
-
+	int GetBlockId(ADDR virtual_addr);
+	ADDR GetBlockOffset(ADDR virtual_addr);
 	/*
 	 * Given address, load & write page
 	 */
@@ -294,6 +315,7 @@ private:
 public:
 	int fd; //for file operations
 	BufferTableItem  buffer_table[BUFFER_SIZE];
+	BlockTableItem block_table[N_BLOCK];
 	Frame buffer[BUFFER_SIZE];
 	AddressSpace addr_space = AddressSpace(0);
 	ADDR GetPageId(ADDR virtual_addr);
@@ -302,9 +324,10 @@ public:
 	~StorageManagement();
 
 	char* ReadFile(ADDR addr);
-	void WriteFile(char *buf,unsigned int length, int count);
 	int InitStorage(char *path); //flag=0:create new file else:do not need create
 	int ReadBuffer(ADDR virtual_addr, void *buf, unsigned int length);
+	int ReadBlock(ADDR virtual_addr, char** buf, unsigned int length);
 	int Write(void *buf, unsigned int length);
 	void FlushBuffer();
+	void FlushBlock();
 };

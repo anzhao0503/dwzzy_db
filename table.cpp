@@ -68,39 +68,18 @@ int TableManagement::InitTable(char* tb_name, int db_id, int index, bool exist) 
 		   // load data to disk and create Table
 		   ADDR seg_id = this->storage_manager->addr_space.GetCurrentSeg();
 		   ADDR start_addr = this->storage_manager->addr_space.GetCurrentAddr();
-		   FILE* fp1;
-		   if ((fp1 = fopen(tb_name, "r")) == NULL) {
-		   		cout<<"error find saved file"<<endl;
-		   		return -1;
+		   char buf[PAGE_SIZE+1];
+		   long long tuple_num = 0;
+		   off_t offset = tuple_num * MAX_TUPLE_SIZE;
+		   int ret = 0;
+		   lseek(this->storage_manager->fd,offset,SEEK_SET);
+		   while ((ret = read(this->storage_manager->fd, buf, PAGE_SIZE)) != 0) {
+			   this->storage_manager->Write(buf, PAGE_SIZE);
+			   tuple_num += 8;
+			   offset = tuple_num * MAX_TUPLE_SIZE;
+			   lseek(this->storage_manager->fd,offset,SEEK_SET);
 		   }
-		   char buf[MAX_TUPLE_SIZE+1];
-		   int tuple_num = 0;
-		   while (!feof(fp1)) {
-			   fgets(buf, sizeof(buf), fp1);
-			   char* input = (char*)calloc(sizeof(char)*MAX_TUPLE_SIZE+1, sizeof(char));
-			   char seg1[] = "|";
-			   char* substr1;
-			   char* part;
-			   int j = 0;
-			   substr1 = strtok(buf, seg1);
-			   while (j < attribute_num) {
-				   uint32_t strLen;
-				   part = (char*)malloc(MAX_TUPLE_SIZE);
-				   int res = Encoder::encode((const void*)substr1, part, &strLen, types[j], attr_length[j]);
-				   cout << part << endl;
-				   if (res != -1) {
-					   strcat(input, part);
-				   }
-				   free(part);
-				   j++;
-				   substr1 = strtok(NULL, seg1);
-			   }
-			   break;
-			   this->storage_manager->Write(input, MAX_TUPLE_SIZE);
-			   tuple_num += 1;
-			   free(input);
-		   }
-		   fclose(fp1);
+//		   this->storage_manager->FlushBlock();
 		   Table* new_table = new Table(tb_name, db_id, index, seg_id, start_addr, exist, types, attr_length, attribute_num);
 		   new_table->table_meta->tuple_num = tuple_num;
 		   this->tables.insert((vector<Table*>::iterator)this->tables.begin()+index, new_table);

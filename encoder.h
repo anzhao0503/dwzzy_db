@@ -18,12 +18,12 @@ public:
 private:
 	static int decode_int(const char* buf, uint32_t len, int64_t* out);
 	static int decode_float(const char* buf, uint32_t len, float* out);
-	static int decode_char(const char* buf, uint32_t len, char* out);
+	static int decode_char(const char* buf, uint32_t len, char* out, uint32_t* strLe);
 	static int decode_varchar(const char* buf, uint32_t len, char* out, uint32_t* strLen);
 	static int decode_date(const char* buf, uint32_t len, int64_t* out);
 	static int encode_int(const int64_t* value, char* out, uint32_t* strLen);
 	static int encode_float(const float* value, char* out, uint32_t* strLen);
-	static int encode_char(const char* value, char* out, uint32_t* strLen);
+	static int encode_char(const char* value, char* out, uint32_t* strLen, uint32_t len);
 	static int encode_varchar(const char* value, char* out, uint32_t* strLen, uint32_t len);
 	static int encode_date(const int64_t* value, char* out, uint32_t* strLen);
 };
