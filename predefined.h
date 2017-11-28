@@ -15,7 +15,7 @@ namespace bpt {
 #define BP_ORDER 20
 
 /* key/value type */
-typedef int value_t;
+typedef unsigned long long value_t;
 struct key_t {
     char k[50];
 

@@ -108,6 +108,7 @@ public:
     off_t search_leaf(off_t index, const key_t &key) const;
     off_t search_leaf(const key_t &key) const
     {
+
         return search_leaf(search_index(key), key);
     }
 

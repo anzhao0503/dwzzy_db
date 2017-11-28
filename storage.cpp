@@ -15,35 +15,39 @@ BlockTableItem::BlockTableItem(): index(-1), virtual_addr(-1), in_buffer(false),
 StorageManagement::StorageManagement() {
 	this->last_used = 0;
 	this->last_used_block = 0;
-	this->fd = 0;
 	this->InitBufferTable();
 	this->InitBlockTable();
 	this->segment_table = SegmentTable();
-	this->frame_table = FrameTable();
 }
 
 StorageManagement::~StorageManagement() {
 	this->FlushBuffer();
-	close(this->fd);
+	for (int i = 0; i < (sizeof(this->fd) / sizeof(this->fd[0])); i++) {
+		close(this->fd[i]);
+	}
 	//cout<<"end "<<endl;
 }
 /*
  * initial storage, pass file_path
  */
-int StorageManagement::InitStorage(char *path){
-	if((access(path, 0))!=0) {
-		this->fd = open(path,O_CREAT|O_EXCL|O_RDWR,0777);
+int StorageManagement::InitStorage(vector<char*> path){
+	this->fd = (int*)malloc(sizeof(int)*path.size());
+	for (int i = 0; i < path.size(); i++) {
+		if((access(path[i], 0))!=0) {
+			this->fd[i] = open(path[i],O_CREAT|O_EXCL|O_RDWR,0777);
+		}
+		else {
+			this->fd[i] = open(path[i],O_APPEND|O_RDWR,0777);
+		}
+		if (this->fd[i]!=-1) {
+			//cout<<"Disk space initializing is done"<<endl;
+			this->segment_table.Add_Seg();
+		} else {
+			cout<<"Opening file meets error"<<endl;
+			return -1;
+		}
 	}
-	else {
-		this->fd = open(path,O_APPEND|O_RDWR,0777);
-	}
-	if (this->fd!=-1) {
-		//cout<<"Disk space initializing is done"<<endl;
-		return 1;
-	} else {
-		cout<<"Opening file meets error"<<endl;
-		return -1;
-	}
+	return -1;
 }
 
 void StorageManagement::InitBufferTable() {
@@ -277,7 +281,7 @@ int StorageManagement::ReadBlock(ADDR virtual_addr, char* buf[], unsigned int le
 		//hit
 		for (int i = 0; i < BLOCK_SIZE; i++) {
 			if ((char*)buffer[index*BLOCK_SIZE+i].frame_content == NULL){
-//				return NULL;
+
 			}
 			else {
 				memcpy(buf[i], (char*)buffer[index*BLOCK_SIZE+i].frame_content, PAGE_SIZE);
@@ -292,7 +296,7 @@ int StorageManagement::ReadBlock(ADDR virtual_addr, char* buf[], unsigned int le
 /*
  * write frame to buffer and change the BufferTable
  */
-int StorageManagement::WriteBuffer(ADDR virtual_addr, void *buf, unsigned int length) {
+int StorageManagement::WriteBlock(ADDR virtual_addr, void *buf, unsigned int length) {
 
 	int block_id = this->GetBlockId(virtual_addr);
 
@@ -344,22 +348,51 @@ int StorageManagement::WriteBuffer(ADDR virtual_addr, void *buf, unsigned int le
 	}
 }
 
+int StorageManagement::WriteBuffer(ADDR virtual_addr, void *buf, unsigned int length) {
+	int index = this->HitBuffer(virtual_addr);
+//	cout << virtual_addr << endl;
+	BufferTableItem* item = NULL;
+	if (index < 0) {
+		/*
+		 * if the address not exists in the buffer, change the BufferTable of the item to swap out
+		 */
+		item = this->NRU(this->buffer_table);
+		item->virtual_addr = virtual_addr;
+		item->in_buffer = true;
+		return this->WriteBuffer(virtual_addr, buf, length);
+	}
+	else {
+		/*
+		 * if the address exists in the buffer, change the buffer with new frame content
+		 */
+		memcpy(buffer[index].frame_content, buf, length);
+		/*
+		 * change items in BufferTable
+		 */
+		this->buffer_table[index].is_written = true;
+		this->buffer_table[index].in_buffer = true;
+		this->buffer_table[index].U = true;
+		this->buffer_table[index].M = true;
+		return length;
+	}
+}
 /*
  * write *buf to buffer
  */
-int StorageManagement::Write(void *buf, unsigned int length){
+int StorageManagement::Write(int tb_id, void *buf, unsigned int length){
 	/*
 	 * Allocate pages;
 	 */
-	ADDR current_seg = this->addr_space.GetCurrentSeg();
-	ADDR current_addr = this->addr_space.GetCurrentAddr();
-	Segment* seg = this->segment_table.seg_table[current_seg];
+	ADDR seg_id = tb_id;
+
+	Segment* seg = this->segment_table.seg_table[seg_id];
+	ADDR current_addr = seg->addr_space->GetCurrentAddr();
 	int npages = length/PAGE_SIZE;
 	ADDR tmp_new_page_id;
 	for(int i = 0; i < npages; i++){
-		if (this->GetOffset(addr_space.GetCurrentAddr()) == 0) {
+		if (this->GetOffset(seg->addr_space->GetCurrentAddr()) == 0) {
 			tmp_new_page_id = seg->AllocPage();
-			seg->page_table[tmp_new_page_id]->start_addr = addr_space.GetCurrentAddr();
+			seg->page_table[tmp_new_page_id]->start_addr = seg->addr_space->GetCurrentAddr();
 			memcpy(seg->page_table[tmp_new_page_id]->content, buf+i*PAGE_SIZE, PAGE_SIZE);
 			seg->page_table[tmp_new_page_id]->is_used = true;
 		}
@@ -368,7 +401,7 @@ int StorageManagement::Write(void *buf, unsigned int length){
 			seg->page_table[this->GetPageId(current_addr)]->is_used = true;
 		}
 		this->WriteBuffer(seg->page_table[this->GetPageId(current_addr)]->start_addr, seg->page_table[this->GetPageId(current_addr)]->content, PAGE_SIZE);
-		this->addr_space.ADDRIncrease(PAGE_SIZE);
+		seg->addr_space->ADDRIncrease(PAGE_SIZE);
 	}
 	return 1;
 }
@@ -427,7 +460,7 @@ ADDR StorageManagement::GetOffset(ADDR virtual_addr){
 	return offset;
 }
 int StorageManagement::GetBlockId(ADDR virtual_addr) {
-	int block_id;
+	ADDR block_id;
 	block_id = virtual_addr / (BLOCK_SIZE * PAGE_SIZE);
 	return block_id;
 }
@@ -589,8 +622,8 @@ void Page::ResetPage(){
  * write frame content into file related offset
  * not write into frame.content
  */
-int Frame::FlushFrame(const void *buf,int fd){
-	off_t offset = this->frame_id * PAGE_SIZE;
+int Frame::FlushFrame(const void *buf, int fd){
+	off_t offset = (this->frame_id & PAGE_MASK) * PAGE_SIZE;
 	if(lseek(fd,offset,SEEK_SET) != -1){
 		// write(fd,buf,PAGE_SIZE);
 		return 0;
@@ -626,9 +659,10 @@ vector<ADDR> Segment::AllocPages(unsigned int npages){
  */
 unsigned char* StorageManagement::LoadPage(ADDR virtual_addr, int length){
 	unsigned char* buf = (unsigned char*)calloc(sizeof(unsigned char)*length, sizeof(unsigned char));
-	//cout<<"virtual addr "<<virtual_addr<<endl;
+
 	ADDR seg_id = this->GetSegId(virtual_addr);
-	ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+	Segment* seg = this->segment_table.seg_table[seg_id];
+//	ADDR start_id = this->segment_table.seg_table[seg_id]->start;
 	map<ADDR,ADDR> addr_map = this->segment_table.seg_table[seg_id]->addr_map;
 	map<ADDR, ADDR>::iterator it = addr_map.begin();
 //	cout << "map" << endl;
@@ -642,8 +676,10 @@ unsigned char* StorageManagement::LoadPage(ADDR virtual_addr, int length){
 	iter = addr_map.find(page_id);
 	if(iter != addr_map.end())
 	{
-		Frame* frame = this->frame_table.frame_table[iter->second];
-		if((buf = (unsigned char*)frame->GetFrameContent(this->fd)) != NULL){
+		Frame* frame = seg->frame_table->frame_table[iter->second];
+
+		if((unsigned char*)frame->GetFrameContent(this->fd[seg_id]) != NULL){
+			memcpy(buf, frame->GetFrameContent(this->fd[seg_id]), PAGE_SIZE);
 			return buf;
 		}
 		else {
@@ -669,7 +705,8 @@ int StorageManagement::WritePage(ADDR virtual_addr,const void *buf, unsigned int
 		return -1;
 	}
 	ADDR seg_id = this->GetSegId(virtual_addr);
-	ADDR start_id = this->segment_table.seg_table[seg_id]->start;
+	Segment* seg = this->segment_table.seg_table[seg_id];
+//	ADDR start_id = this->segment_table.seg_table[seg_id]->start;
 	map<ADDR,ADDR> addr_map = this->segment_table.seg_table[seg_id]->addr_map;
 	ADDR page_id = this->GetPageId(virtual_addr);
 //	cout << "page: " << page_id << endl;
@@ -681,7 +718,7 @@ int StorageManagement::WritePage(ADDR virtual_addr,const void *buf, unsigned int
 	 *invalid old page, and assign new pages
 	 */
 	if(iter != addr_map.end()){
-		Frame* frame = this->frame_table.frame_table[iter->second];
+		Frame* frame = seg->frame_table->frame_table[iter->second];
 		frame->is_modified = false;
 		Page* page = this->segment_table.seg_table[seg_id]->page_table[page_id];
 		page->is_modified = false;
@@ -690,9 +727,9 @@ int StorageManagement::WritePage(ADDR virtual_addr,const void *buf, unsigned int
 	 * allocate new page
 	 */
 	ADDR new_page = this->GetPageId(virtual_addr);
-	ADDR new_frame = this->frame_table.AllocFrame();
+	ADDR new_frame = seg->frame_table->AllocFrame();
 	this->segment_table.seg_table[seg_id]->addr_map.insert(map<ADDR,ADDR>::value_type (new_page,new_frame));
-	int ret = this->frame_table.frame_table[new_frame]->FlushFrame(buf,this->fd);
+	int ret = seg->frame_table->frame_table[new_frame]->FlushFrame(buf, this->fd[seg_id]);
 	return ret;
 }
 

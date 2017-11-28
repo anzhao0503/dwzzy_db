@@ -84,25 +84,27 @@ int bplus_tree::search(const key_t& key, value_t *value) const
 int bplus_tree::search_range(key_t *left, const key_t &right,
                              value_t *values, size_t max, Operator left_op, Operator right_op, bool *next) const
 {
-    if (left == NULL || keycmp(*left, right) > 0)
-        return -1;
 
+	if (left == NULL || keycmp(*left, right) > 0)
+        return -1;
     off_t off_left = search_leaf(*left);
+
     off_t off_right = search_leaf(right);
+
     off_t off = off_left;
     size_t i = 0;
     record_t *b, *e;
-
     leaf_node_t leaf;
     while (off != off_right && off != 0 && i < max) {
         map(&leaf, off);
-
         // start point
         if (off_left == off) {
-        	if (left_op == ge)
-        		 b = find(leaf, *left);
-        	else if (left_op == gt)
+
+        	if (left_op == ge) {
+        		b = find(leaf, *left);
+        	} else if (left_op == gt)  {
         		b = find1(leaf, *left);
+        	}
         }
 
         else
@@ -119,8 +121,11 @@ int bplus_tree::search_range(key_t *left, const key_t &right,
     // the last leaf
     if (i < max) {
         map(&leaf, off_right);
-
-        b = find(leaf, *left);
+        if (left_op == ge) {
+			b = find(leaf, *left);
+		} else if (left_op == gt)  {
+			b = find1(leaf, *left);
+		}
         if (right_op == le){
         	e = upper_bound(begin(leaf), end(leaf), right);
         } else if (right_op == lt) {

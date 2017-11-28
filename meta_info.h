@@ -45,6 +45,7 @@ public:
 	int attribute_length;
 	int attribute_index;
 	int attribute_offset;
+	void dump();
 	AttributeMeta() {
 		attribute_type = INTEGER;
 		attribute_index = -1;
@@ -62,6 +63,8 @@ public:
 	int tuple_num;
 	char data_file_path[128];
 	vector<AttributeMeta*> attr_meta;
+	void dump();
+	AttributeMeta* GetAttributeMeta(int attr_index);
 	TableMeta() {
 		db_id = -1;
 		start_addr = -1;
