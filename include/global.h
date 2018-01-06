@@ -51,10 +51,10 @@
 
 
 
- enum TYPE
-{
-     I=1,C,V,F,D
-};
+//  enum TYPE
+// {
+//      I=1,C,V,F,D
+// };
 
 
 

@@ -10,13 +10,29 @@ extern "C"{
 /*
   	functions
  */
+int PrintSelectQuery();
+int PrintAttrList();
 int Printdmy();
+int Printdmy();
+int PrintCondList();
+void PrintSpace(int n);
+void PrintTree();
+
+int SaveSelItem(char* tb_name, char* col_name);
+int SaveFromItem(char* tb_name);
+int SaveCondition(char* tb_name, char* col_name, char* value, TYPE value_type, OP op);
+int SaveJoin(char* tb_name1, char* col_name1, char* tb_name2, char* col_name2, OP op);
+int SaveOrderbyItem(char *col_name);
+int SaveAttributeInfo(char* attr_name, TYPE type, int size);
+int FillSelectCond();
+int FillDeleteCond();
+int FillUpdateCond();
+
 static char errmsg[4096];
 OP Operator(char* opstr);
 TYPE GetType(char* type_str);
 static char recordstr[4096];
 TableManagement* table_manager;
-
 
 /*
 	variables
@@ -581,61 +597,7 @@ int FillUpdateCond(){
 
 	return 0;
 }
-bool ExecDelete(){
-	int tb_id = table_manager->GetTableId(tb_name);
-	vector<int> cols;
-	vector<OP> operators;
-	char* keys[cond_count];
-	for(int i = 0; i < cond_count; i++){
-		int col_id = table_manager->tables[tb_id]->GetAttrId(delete_query->CondList[i].col_name);
-		cols.push_back(col_id);
-		keys[i] = (char*)malloc(sizeof(char)*256);
-		memcpy(keys[i], delete_query->CondList[i].value, sizeof(delete_query->CondList[i].value));
-		operators.push_back(delete_query->CondList[i].op);
-	}
-	return table_manager->Delete(tb_id, cols, operators, keys);
-	
-}
-int ExecProject() {
-return 0;
-}
-bool ExecUpdate(){
-	int tb_id = table_manager->GetTableId(update_query->tb_name);
-	int col_id;
-	vector<int> up_cols;
-	vector<int> cols;
-	char* keys[cond_count];
-	vector<OP> operators;
-	cout<<"cond_count "<<cond_count<<" update_col_count " << update_col_count<<endl;
-	for(int i = 0; i < update_col_count; i++){
-		col_id = table_manager->tables[tb_id]->GetAttrId(update_query->col_name[i]);
-		up_cols.push_back(col_id);
-		cout<<"col i "<< update_query->col_value[i]<<endl;
-	}
-	for(int i = 0; i < cond_count; i++){
-		col_id = table_manager->tables[tb_id]->GetAttrId(update_query->CondList[i].col_name);
-		cols.push_back(col_id);
-		keys[i] = (char*)malloc(sizeof(char)*256);
-		memcpy(keys[i], update_query->CondList[i].value, sizeof(update_query->CondList[i].value));
-		operators.push_back(update_query->CondList[i].op);
-		cout<<"cond i "<< keys[i]<<endl;
-	}	
-	return table_manager->Update(tb_id, up_cols, update_query->col_value, cols, operators, keys);
-}
-int ExecCreate(){
-	char attr_names[16][MAX_ATTR_NAME_LENGTH];
-	TYPE *types;
-	int *attr_length;
-	int attribute_num = attr_count;
-	attr_length = (int*)malloc(sizeof(int)*attribute_num);
-	types = (TYPE*)malloc(sizeof(TYPE)*attribute_num);
-	for(int i = 0; i<attr_count;i++){
-		strcpy(attr_names[i],attr_list[i].attr_name);
-		types[i] = attr_list[i].type;
-		attr_length[i] = attr_list[i].used_size;
-	}
-	table_manager->CreateTable(0, tb_name, MAX_TUPLE_SIZE, attr_names, types, attr_length,  attribute_num);
-}
+
 /*
  * attr_list: attributes iostreamfor a table
  */

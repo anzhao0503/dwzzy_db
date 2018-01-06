@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../include/table.h"
+#include "../include/metadatamanager.h"
 using namespace std;
 
 /*
@@ -99,35 +100,25 @@ struct UpdateQuery{
 	Condition	CondList[MAX_COND_NUM];
 };
 
- /* if necessary, query stack for nested query.*/
+extern SelectQuery* query;
+extern DeleteQuery* delete_query;
 
-//enum TYPE{
-//	I=1,C,V,F,D
-//};
-//enum OP{
-//	E=1,GE,G,LE,L,NE
-//};
+extern int attr_count;
+extern char* tb_name;
+extern AttrInfo attr_list[MAX_ATTR_NUM];
 
-int PrintSelectQuery();
-int PrintAttrList();
+extern int update_col_count;
+extern UpdateQuery* update_query;
+
+extern TableManagement* table_manager;
+
+extern int cond_count;
+extern Condition cond_list[MAX_COND_NUM];
+
 int ExecCreate();
 bool ExecDelete();
 bool ExecUpdate();
-int Printdmy();
-int PrintCondList();
 int ExecProject();
-void PrintSpace(int n);
-void PrintTree();
-int SaveSelItem(char* tb_name, char* col_name);
-int SaveFromItem(char* tb_name);
-int SaveCondition(char* tb_name, char* col_name, char* value, TYPE value_type, OP op);
-int SaveJoin(char* tb_name1, char* col_name1, char* tb_name2, char* col_name2, OP op);
-int SaveOrderbyItem(char *col_name);
-int SaveAttributeInfo(char* attr_name, TYPE type, int size);
-int FillSelectCond();
-int FillDeleteCond();
-int FillUpdateCond();
-
 
 void InitQuery();
 void DestoryQuery();
