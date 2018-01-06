@@ -22,6 +22,8 @@ CREATE	|
 create		return CREATE;
 TABLE	|
 table		return TABLE;
+LOAD	|
+load 		return LOAD;
 DROP	|
 drop		return DROP;
 INDEX	|

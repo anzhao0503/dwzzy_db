@@ -79,6 +79,10 @@ struct Orderby{
 struct SelectQuery{
 	int distinct;
 	int all;
+	int sel_count;
+	int from_count;
+	int join_count;
+	int cond_count;
 	SelItem		SelList[MAX_SELITEM_NUM];
 	FromItem 	FromList[MAX_FROM_NUM];
 	Join 		JoinList[MAX_JOIN_NUM];
@@ -90,6 +94,7 @@ struct SelectQuery{
 
 struct DeleteQuery{
 	char* tb_name;
+	int cond_count;
 	Condition	CondList[MAX_JOIN_NUM];
 };
 
@@ -97,6 +102,8 @@ struct UpdateQuery{
 	char* tb_name;
 	char* col_name[256];
 	char* col_value[256];
+	int cond_count;
+	int col_count;
 	Condition	CondList[MAX_COND_NUM];
 };
 
@@ -115,10 +122,22 @@ extern TableManagement* table_manager;
 extern int cond_count;
 extern Condition cond_list[MAX_COND_NUM];
 
-int ExecCreate();
-bool ExecDelete();
-bool ExecUpdate();
-int ExecProject();
+int load_data(string tb_name);
+void exec_select_stmt();
+void exec_create_stmt();
+void exec_drop_table_stmt();
+void exec_show_table_stmt();
+void exec_delete_stmt();
+void exec_update_stmt();
+
+string spliceUpdateStmt();
+string spliceDeleteStmt();
+string spliceSelectStmt();
+string spliceCreateStmt();
+string spliceDropStmt();
+
+bool insertIntoTableMeta();
+bool deleteFromMeta(string tb_name);
 
 void InitQuery();
 void DestoryQuery();

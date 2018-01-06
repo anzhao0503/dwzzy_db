@@ -98,7 +98,7 @@ int funcRnt;
 	/* reserved keywords */
 %token SELECT FROM WHERE ORDER BY ASC DESC
 %token ALL UNIQUE DISTINCT
-%token CREATE TABLE DROP INDEX
+%token CREATE TABLE DROP INDEX LOAD
 %token INSERT INTO VALUES DELETE UPDATE SET
 %token CHARACTER INTEGER DATE FLOAT VARCHAR
 %token SHOW TABLES
@@ -130,6 +130,7 @@ sql_func:
 		{
 			funcRnt = 100;
 		}
+	|	table_load
 	|	table_def
 	|	table_drop
 	|	insert_stat
@@ -137,14 +138,23 @@ sql_func:
 	|	delete_stat
 	|	select_stat
 	;
+/*load_data*/
+table_load:
+		LOAD STRING INTO NAME ';'
+		{
+			tb_name = $4;
+			cout<<"LOAD " << $2 <<" INTO "<<$4<<" "<<endl;
+			string tmp_name(tb_name);
+			load_data(tmp_name);
+		}
+	;
 /* create table */
 table_def:
 		CREATE TABLE table '(' table_attr_list ')' ';'
 		{
 			cout<<"Create Table "<< tb_name << endl;
 			PrintAttrList();
-			ExecCreate();
-			parser_init();	
+			exec_create_stmt();	
 		}
 	;
 
@@ -207,9 +217,7 @@ table_drop:
 		DROP TABLE table ';'
 		{
 			cout<<"DROP TABLE"<< tb_name << endl;
-			cout<<"Call droptable("<<tb_name<<") func here."<<endl;
-			table_manager->DropTable(tb_name);
-			parser_init();	
+			exec_drop_table_stmt();
 		}
 	;
 /* insert statements */
@@ -220,7 +228,6 @@ insert_stat:
 			vector<int> cols;
 			table_manager->Insert(tb_id, cols, insert_record);
 			cout << "INSERT INTO " << tb_name << " " << recordstr <<endl;
-			parser_init();	
 		}
 	; 	
 insert_list:
@@ -274,8 +281,7 @@ update_stat:
 			cout<<"tb_name:"<<update_query->tb_name<<endl;
 			FillUpdateCond();
 			cout<<"Update Cond:"<<endl;
-			//PrintCondList();
-			ExecUpdate();
+			exec_update_stmt();
 		}
 	;
 set_cond:
@@ -328,8 +334,7 @@ delete_stat:
 			FillDeleteCond();
 			PrintCondList();
 			cout << "Call delete() function here."<<endl;
-			ExecDelete();
-			parser_init();	
+			exec_delete_stmt();
 			
 		}
 	;
@@ -344,18 +349,8 @@ select_stat:
 select_seg:
 		select_clause FROM fromlist where_clause orderby_clause
 		{
-			//if(cond_count == 0) {
-			  //cout << tb_name << endl;
-			   //int tb_id = table_manager->GetTableId(tb_name);
-			   //vector<int> cols;
-                           //cout << tb_id << endl;
-                           //table_manager->Project(tb_id, cols);
-			//}
 			FillSelectCond();
-			//PrintSelectQuery();
-			//Printdmy();
-			parser_init();
-			
+			exec_select_stmt();			
 		}
 	;
 select_clause:
@@ -478,44 +473,32 @@ orderlist:
 void parser_init()
 {
 	lex_init();
-	// tb_name = NULL;
+	tb_name = NULL;
 	funcRnt = 0;
 	curPos = 0;
-	cond_count = 0;
-	join_count = 0;
-	attr_count = 0;
-	sel_count = 0;
-	from_count = 0;
-	update_col_count = 0;
+
 	for(int i = 0; i<insert_count;i++)
 		memset(insert_record[i],0,MAX_TUPLE_SIZE);
 	insert_count = 0;
+
+	attr_count = 0;
 	memset(attr_list,0,sizeof(AttrInfo)*MAX_ATTR_NUM);
+
+	cond_count = 0;
 	memset(cond_list,0,sizeof(Condition)*MAX_COND_NUM);
+
+	join_count = 0;	
+	sel_count = 0;
+	from_count = 0;
 	memset(query,0,sizeof(SelectQuery));
 	memset(delete_query,0,sizeof(DeleteQuery));
+
+	update_col_count = 0;
 	memset(update_query,0,sizeof(UpdateQuery));
 	return;
 }
 
 void InitQuery(){
-	char* tb_name_1 = "nation.tbl.data";
-	char* tb_name_2 = "region.tbl.data";
-	char* tb_name_3 = "supplier.tbl.data";
-
-	vector<char*> tb_names;
-	tb_names.push_back(tb_name_1);
-	tb_names.push_back(tb_name_2);
-	tb_names.push_back(tb_name_3);
-	table_manager = new TableManagement(tb_names);
-	for (int i = 0; i < tb_names.size(); i++) {
-		table_manager->InitTable(tb_names[i], 0);
-	}
-	cout << "load ok" << endl;
-	table_manager->CreateIndex(0, 0);
-	table_manager->CreateIndex(1, 0);
-	cout << "create index ok" << endl;
-//	table_manager = new TableManagement();
 	update_query = (UpdateQuery*)malloc(sizeof(UpdateQuery));
 	delete_query = (DeleteQuery*)malloc(sizeof(DeleteQuery));
 	query = (SelectQuery*)malloc(sizeof(SelectQuery));
@@ -585,14 +568,21 @@ int SaveOrderbyItem(char *col_name){
 	return 0;
 }
 int FillSelectCond(){
+	query->cond_count = cond_count;
+	query->from_count = from_count;
+	query->sel_count = sel_count;
+	query->join_count = join_count;
 	memcpy(query->CondList,cond_list,cond_count * sizeof(Condition));
 	return 0;
 }
 int FillDeleteCond(){
+	delete_query->cond_count = cond_count;
 	memcpy(delete_query->CondList,cond_list,cond_count * sizeof(Condition));
 	return 0;
 }
 int FillUpdateCond(){
+	update_query->cond_count = cond_count;
+	update_query->col_count = update_col_count;
 	memcpy(update_query->CondList,cond_list,cond_count * sizeof(Condition));
 
 	return 0;

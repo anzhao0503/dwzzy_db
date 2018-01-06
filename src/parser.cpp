@@ -19,6 +19,60 @@ extern TableManagement* table_manager;
 
 extern int cond_count;
 extern Condition cond_list[MAX_COND_NUM];
+/*enum OP{
+	eq,nq,lt,le,gt,ge
+};
+*/
+string GetTypeString(OP op_type){
+	string type_string = " ";
+	switch(op_type){
+		case eq:
+			type_string += "= ";
+			break;
+		case ge:
+			type_string += ">= ";
+			break;
+		case gt:
+			type_string +=	"> ";
+			break;
+		case le:
+			type_string += "<= ";
+			break;
+		case lt:
+			type_string += "< ";
+			break;
+		case nq:
+			type_string += "!= ";
+			break;
+		default:
+			cout<<"Invalid Operator!"<<endl;
+			return "";
+	}
+	return type_string;
+}
+
+string GetVTypeString(TYPE type, int i){
+	string tmp_string;
+	if(type == 1)
+		return "INTEGER";
+	if(type == C){
+		tmp_string = "CHAR";
+		tmp_string = tmp_string+ "("+std::to_string(attr_list[i].used_size)+")";
+		return tmp_string;
+	}
+	if(type == V){
+		tmp_string = "VARCHAR";
+		tmp_string = tmp_string+ "("+std::to_string(attr_list[i].used_size)+")";
+		return tmp_string;
+	}
+	if(type == F){
+		tmp_string = "FLOAT";
+		tmp_string = tmp_string+ "("+std::to_string(attr_list[i].used_size)+")";
+		return tmp_string;
+	}
+	if(type == D)
+		return "DATE";
+}
 
 bool isTableExists(string table_name){
 	cout<<"Enter isTableExists."<<endl;
@@ -33,7 +87,6 @@ bool isTableExists(string table_name){
 	cout<<"table exists"<<endl;
 	return true;
 }
-
 bool insertIntoTableMeta(){
 	string tmp_tb_name(tb_name);
 	/*
@@ -57,67 +110,157 @@ bool insertIntoTableMeta(){
 	cout<<"SET META."<<endl;
 	return true;
 }
-
-int ExecCreate(){
-	char attr_names[16][MAX_ATTR_NAME_LENGTH];
-	TYPE *types;
-	int *attr_length;
-	int attribute_num = attr_count;
-	attr_length = (int*)malloc(sizeof(int)*attribute_num);
-	types = (TYPE*)malloc(sizeof(TYPE)*attribute_num);
-	for(int i = 0; i<attr_count;i++){
-		strcpy(attr_names[i],attr_list[i].attr_name);
-		types[i] = attr_list[i].type;
-		attr_length[i] = attr_list[i].used_size;
-	}
-	insertIntoTableMeta();
-	table_manager->CreateTable(0, tb_name, MAX_TUPLE_SIZE, attr_names, types, attr_length,  attribute_num);
-}
-
 bool deleteFromMeta(string tb_name){
 	TableMedata tmp_tb_meta;
 	MetadataManager::getInstance()->delete_tablemetadata(tb_name);
 	return true;
 }
 
-bool ExecDelete(){
-	int tb_id = table_manager->GetTableId(tb_name);
-	vector<int> cols;
-	vector<OP> operators;
-	char* keys[cond_count];
-	for(int i = 0; i < cond_count; i++){
-		int col_id = table_manager->tables[tb_id]->GetAttrId(delete_query->CondList[i].col_name);
-		cols.push_back(col_id);
-		keys[i] = (char*)malloc(sizeof(char)*256);
-		memcpy(keys[i], delete_query->CondList[i].value, sizeof(delete_query->CondList[i].value));
-		operators.push_back(delete_query->CondList[i].op);
+string spliceCreateStmt(){
+	if((attr_count == 0) || (tb_name ==NULL)){
+		cout<<"spliceCreateStmt error"<<endl;
+		return "";
 	}
-	return table_manager->Delete(tb_id, cols, operators, keys);
-	
-}
-int ExecProject() {
-		return 0;
-}
-bool ExecUpdate(){
-	int tb_id = table_manager->GetTableId(update_query->tb_name);
-	int col_id;
-	vector<int> up_cols;
-	vector<int> cols;
-	char* keys[cond_count];
-	vector<OP> operators;
-	cout<<"cond_count "<<cond_count<<" update_col_count " << update_col_count<<endl;
-	for(int i = 0; i < update_col_count; i++){
-		col_id = table_manager->tables[tb_id]->GetAttrId(update_query->col_name[i]);
-		up_cols.push_back(col_id);
-		cout<<"col i "<< update_query->col_value[i]<<endl;
+	string tmp_stmt;
+	tmp_stmt = "CREATE TABLE ";
+	tmp_stmt.append(tb_name);
+	tmp_stmt.append("(");
+	tmp_stmt.append(attr_list[0].attr_name);
+	tmp_stmt.append(" ");
+	string type_string = GetVTypeString(attr_list[0].type,0);
+	tmp_stmt.append(type_string);
+	for (int i = 1; i < attr_count; i++)
+	{
+		tmp_stmt.append(", ");
+		tmp_stmt.append(attr_list[i].attr_name);
+		tmp_stmt.append(" ");
+		string type_string = GetVTypeString(attr_list[i].type,i);
+		tmp_stmt.append(type_string);
 	}
-	for(int i = 0; i < cond_count; i++){
-		col_id = table_manager->tables[tb_id]->GetAttrId(update_query->CondList[i].col_name);
-		cols.push_back(col_id);
-		keys[i] = (char*)malloc(sizeof(char)*256);
-		memcpy(keys[i], update_query->CondList[i].value, sizeof(update_query->CondList[i].value));
-		operators.push_back(update_query->CondList[i].op);
-		cout<<"cond i "<< keys[i]<<endl;
-	}	
-	return table_manager->Update(tb_id, up_cols, update_query->col_value, cols, operators, keys);
+	tmp_stmt.append(" );");
+	cout << tmp_stmt << endl;
+	return tmp_stmt;
+
+}
+string spliceDropStmt(){
+	cout<<"spliceDropStmt"<<endl;
+	if(NULL == tb_name){
+		cout << "spliceDropStmt error"<<endl;
+		return "";
+	}
+	string tmp_stmt;
+	tmp_stmt = "DROP TABLE ";
+	tmp_stmt.append(tb_name);
+	tmp_stmt.append(";");
+	cout<<tmp_stmt<<endl;
+	return tmp_stmt;
+}
+
+string spliceCondStmt(int cond_count, Condition* cond_list){
+	if((cond_count == 0)|(NULL == cond_list))
+		return "";
+	string cond_stmt = " WHERE ";
+	// if(cond_list[0].tb_name != ""){
+	// 	cout<<"ok"<<endl;
+	// 	cond_stmt.append(cond_list[0].tb_name);
+	// 	cond_stmt += ".";
+	// }
+	cond_stmt.append(cond_list[0].col_name);
+	string type_string = GetTypeString(cond_list[0].op);
+	cond_stmt.append(type_string);
+	cond_stmt.append(cond_list[0].value);
+	for(int i = 1;i < cond_count;i++){
+		cond_stmt.append(" AND ");
+		// if(cond_list[i].tb_name != ""){
+		// 	cout<<"ok"<<endl;
+		// 	cond_stmt.append(cond_list[i].tb_name);
+		// 	cond_stmt += ".";
+		// }
+		cond_stmt.append(cond_list[i].col_name);
+		string type_string = GetTypeString(cond_list[i].op);
+		cond_stmt.append(type_string);
+		cond_stmt.append(cond_list[i].value);
+	}
+	return cond_stmt;
+}
+string spliceDeleteStmt(){
+	if(NULL == delete_query){
+		cout<<"spliceDeleteStmt error. no delete stmt."<<endl;
+		return "";
+	}
+	string tmp_stmt = "DELETE FROM ";
+	tmp_stmt.append(delete_query->tb_name);
+	/*
+		slpice cond_list same as where_cond in select.
+	 */
+	string cond_stmt = spliceCondStmt(delete_query->cond_count,delete_query->CondList);
+	if(cond_stmt != "")
+		tmp_stmt.append(cond_stmt);
+	tmp_stmt.append(";");
+	cout<< tmp_stmt <<endl;
+	return tmp_stmt;
+}
+
+string spliceUpdateStmt(){	
+	if((NULL == update_query)|(update_query->col_count ==0)){
+		cout<<"spliceUpdateStmt error. no update stmt."<<endl;
+		return "";
+	}
+	string tmp_stmt = "UPDATE ";
+	string tmp_tb_name(update_query->tb_name);
+	tmp_stmt.append(tmp_tb_name);
+	tmp_stmt += " SET ";
+	tmp_stmt.append(update_query->col_name[0]);
+	tmp_stmt += " = ";
+	tmp_stmt.append(update_query->col_value[0]);
+	for(int i = 1; i < update_query->col_count; i++){
+		tmp_stmt += ", ";
+		tmp_stmt.append(update_query->col_name[i]);
+		tmp_stmt += " = ";
+		tmp_stmt.append(update_query->col_value[i]);
+				
+	}
+	string cond_stmt = spliceCondStmt(update_query->cond_count,update_query->CondList);
+	tmp_stmt += cond_stmt;
+	tmp_stmt += ";";
+	return tmp_stmt;
+}
+
+string spliceSelectStmt(){
+		cout<<"spliceSelectStmt"<<endl;
+		if(NULL == query){
+			cout<<"spliceSelectStmt error"<<endl;
+			return "";
+		}
+		string tmp_stmt;
+
+		tmp_stmt = string("SELECT ");
+		//cout<<tmp_stmt<<endl;
+		if(query->all == 1)
+			tmp_stmt.append("* ");
+		if(query->sel_count!=0){
+			for(int i = 0; i<query->sel_count-1;i++){
+				if(query->SelList[i].table_name!= NULL){
+					tmp_stmt.append(query->SelList[i].table_name);
+					tmp_stmt += ".";
+				}
+				tmp_stmt.append(query->SelList[i].col_name);
+				tmp_stmt.append(", ");
+			}
+			tmp_stmt.append(query->SelList[query->sel_count-1].col_name);
+			//cout<<tmp_stmt<<endl;
+		}
+		tmp_stmt.append(" INTO OUTFILE '/var/lib/mysql-files/select_results' FIELDS TERMINATED BY '\t'");
+		tmp_stmt.append(" FROM ");
+		tmp_stmt.append(query->FromList[0].tb_name);
+		for(int i = 1; i < query->from_count; i++){
+			tmp_stmt.append(", ");
+			tmp_stmt.append(query->FromList[i].tb_name);
+		}
+		string cond_stmt = spliceCondStmt(query->cond_count,query->CondList);
+		if(cond_stmt != "")
+			tmp_stmt.append(cond_stmt);
+		tmp_stmt.append(";");
+		cout<<tmp_stmt<<endl;
+		return tmp_stmt;
 }
