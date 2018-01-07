@@ -15,6 +15,13 @@
 using namespace std;
 
 int main(){
+	FILE *fp = fopen("sql.input","r");
+	if(fp==NULL){
+		cout<<"no such file."<<endl;
+		return -1;
+	}
+	extern FILE* yyin;
+	yyin = fp;
 	cout<<"---------------A SIMPLE TEST VERSION.---------------"<<endl;
 	InitQuery();
 	while(1) {

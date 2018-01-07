@@ -13,6 +13,7 @@
 #include <sstream>
 #include <string>
 #include <cstdio>
+#include <unistd.h>
 #include <mysql/mysql.h>
 #include "../include/parser.h"
 
@@ -31,6 +32,8 @@ const char *pUserName = "root";
 const char *pPassword = " ";
 const char *pDbName = "foo";
 const unsigned int iDbPort = 3306;
+
+const char* result_data_path = "/var/lib/mysql-files/select_results";
 
 
 void finish_with_error(const char* msg){
@@ -67,7 +70,7 @@ int load_data(string tb_name){
 	cout<<"load_data"<<endl;
 	if(init_mysql())
 		finish_with_error(NULL);
-	string file_name = "'/var/lib/mysql-files/"+tb_name+".tbl'";
+	string file_name = "'/var/lib/mysql-files/benchmark_data/"+tb_name+".tbl'";
 	string load_stmt = "LOAD DATA INFILE "+ file_name +" INTO TABLE " + tb_name + " FIELDS TERMINATED BY '|' LINES TERMINATED BY '\\n'";
 	const char* cLoadData = load_stmt.c_str();
 	cout<<"cLoadData is "<<cLoadData<<endl;
@@ -99,15 +102,17 @@ string readFile(string filename){
 void exec_select_stmt(){
 	cout<<"exec_select_stmt"<<endl;
 	string tmp_c_sql_stmt = spliceSelectStmt();
-	const char* c_sql_stmt = tmp_c_sql_stmt.c_str();
+	const char* c_sql_stmt = tmp_c_sql_stmt.c_str();	
+	if(access(result_data_path,F_OK)!=-1)
+		remove(result_data_path);
 	if(init_mysql())
 		finish_with_error(NULL);
 	if(exe_sql(c_sql_stmt))
 		finish_with_error(NULL);
 	mysql_close(mysql_conn);
-	string result = readFile("/var/lib/mysql-files/select_results");
+	string result = readFile(result_data_path);
 	cout<<"select results:\n"<<result<<endl;
-	remove("/var/lib/mysql-files/select_results");
+	remove(result_data_path);
 	return;
 }
 void exec_create_stmt(){
@@ -147,7 +152,21 @@ void exec_drop_table_stmt(){
 	deleteFromMeta(table_name);
 	return;
 }
-
+void exec_insert_stmt(){
+	cout<<"executing insert sql....."<<endl;
+	string tmp_c_sql_stmt = spliceInsertStmt();
+	const char* c_sql_stmt = tmp_c_sql_stmt.c_str();
+	if(c_sql_stmt == ""){
+		cout<<"Insert Error."<<endl;
+		return;
+	}
+	if(init_mysql())
+		finish_with_error(NULL);
+	if(exe_sql(c_sql_stmt))
+		finish_with_error(NULL);
+	mysql_close(mysql_conn);
+	return;
+}
 void exec_delete_stmt(){
 	cout<<"exec_delete_stmt"<<endl;
 	// if(!checkIsDStmtValid())

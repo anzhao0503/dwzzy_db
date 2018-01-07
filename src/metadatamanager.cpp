@@ -202,6 +202,32 @@ void MetadataManager::delete_tablemetadata(string str)
     cout<<"delete_tablemetadata: "<<str<<" table not exist, no need to delete!"<<endl;
 }
 
+int MetadataManager:: GetTableId(string table_name){
+    Setting& root = cfg.getRoot();
+    Setting& db_cfg = root[CONFIG_NAME_DATABASE];
+    Setting& tb_namelist = db_cfg[CONFIG_NAME_TABLE_LIST];
+    int len = tb_namelist.getLength();
+    for(int i = 0; i<len; i++){
+      string tmp_name = tb_namelist[i];
+      if(table_name == tmp_name){
+        return i;
+      }
+    }
+    cout<<"No Such Table In MetadataManager. Cannot Return TableId Correctly."<<endl;
+    return -1;
+
+}
+std::string MetadataManager::GetTableName(int table_id){
+      Setting& root = cfg.getRoot();
+      Setting& db_cfg = root[CONFIG_NAME_DATABASE];
+      Setting& tb_namelist = db_cfg[CONFIG_NAME_TABLE_LIST];
+      int len = tb_namelist.getLength();
+      if(table_id > (len-1)){
+        cout<<"No Such Table In MetadataManager. Cannot Return TableName Correctly."<<endl;
+        return "";
+      }
+      return tb_namelist[table_id];
+}
 void MetadataManager::add_tablename_intolist(string str)
 {
 
@@ -291,7 +317,6 @@ void MetadataManager::load_tablemetadata_fromcfg()
 
 
 }
-
 
 void MetadataManager::setMetadataVer(string str)
 {

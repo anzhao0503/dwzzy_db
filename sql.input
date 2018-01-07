@@ -1,0 +1,2 @@
+ select n_name from orders,nation,region where nation.n_regionkey = region.r_regionkey and orders.o_orderdate >= '1995-06-12';
+ INSERT INTO nation VALUES ('25','UNKOWN','1','y final packages. slow foxes cajole quickly. quickly silent platelets breach ironic accounts. unusual pinto') ;

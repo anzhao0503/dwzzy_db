@@ -3,6 +3,8 @@
 
 #include "../include/global.h"
 #include "../include/tableMetadataInfo.h"
+using std::string;
+
 
 
 #include <libconfig.h++>
@@ -29,9 +31,12 @@ public:
     TableMedata get_tablemetadata(std::string str){return tableMetadataInfo.get_tablemetadata_bystr(str);}
     void delete_tablemetadata(std::string str);
 
+
     void setMetadataVer(std::string str);//set the version of DDB
     std::string get_metadata_version(){return version;}//get the version info
-    //Interface for ohter user///////////////////////////////////////////////////////
+
+    int GetTableId(string table_name);
+    std::string GetTableName(int table_id);
 
     static MetadataManager* getInstance();
 private:

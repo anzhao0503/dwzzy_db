@@ -15,10 +15,14 @@ extern AttrInfo attr_list[MAX_ATTR_NUM];
 extern int update_col_count;
 extern UpdateQuery* update_query;
 
-extern TableManagement* table_manager;
+//extern TableManagement* table_manager;
 
 extern int cond_count;
 extern Condition cond_list[MAX_COND_NUM];
+
+extern char* insert_record[MAX_TUPLE_SIZE];
+extern int insert_count;
+
 /*enum OP{
 	eq,nq,lt,le,gt,ge
 };
@@ -155,11 +159,35 @@ string spliceDropStmt(){
 	cout<<tmp_stmt<<endl;
 	return tmp_stmt;
 }
-
+string spliceJoinStmt(int join_count, Join* join_list){
+	if((join_count == 0)|(NULL == join_list))
+		return "";
+	string join_stmt = "";
+	join_stmt.append(join_list[0].tb_name1);
+	join_stmt += ".";
+	join_stmt.append(join_list[0].col_name1);
+	string type_string = GetTypeString(join_list[0].op);
+	join_stmt += type_string;
+	join_stmt.append(join_list[0].tb_name2);
+	join_stmt += ".";
+	join_stmt.append(join_list[0].col_name2);
+	for(int i = 1; i<join_count;i++){
+		join_stmt.append(" AND ");
+		join_stmt.append(join_list[i].tb_name1);
+		join_stmt += ".";
+		join_stmt.append(join_list[i].col_name1);
+		string type_string = GetTypeString(join_list[i].op);
+		join_stmt += type_string;
+		join_stmt.append(join_list[i].tb_name2);
+		join_stmt += ".";
+		join_stmt.append(join_list[i].col_name2);
+	}
+	return join_stmt;
+}
 string spliceCondStmt(int cond_count, Condition* cond_list){
 	if((cond_count == 0)|(NULL == cond_list))
 		return "";
-	string cond_stmt = " WHERE ";
+	string cond_stmt = "";
 	// if(cond_list[0].tb_name != ""){
 	// 	cout<<"ok"<<endl;
 	// 	cond_stmt.append(cond_list[0].tb_name);
@@ -193,6 +221,8 @@ string spliceDeleteStmt(){
 	/*
 		slpice cond_list same as where_cond in select.
 	 */
+	if(cond_count!=0)
+		tmp_stmt += " WHERE ";
 	string cond_stmt = spliceCondStmt(delete_query->cond_count,delete_query->CondList);
 	if(cond_stmt != "")
 		tmp_stmt.append(cond_stmt);
@@ -220,6 +250,8 @@ string spliceUpdateStmt(){
 		tmp_stmt.append(update_query->col_value[i]);
 				
 	}
+	if(cond_count!=0)
+		tmp_stmt += " WHERE ";
 	string cond_stmt = spliceCondStmt(update_query->cond_count,update_query->CondList);
 	tmp_stmt += cond_stmt;
 	tmp_stmt += ";";
@@ -257,10 +289,37 @@ string spliceSelectStmt(){
 			tmp_stmt.append(", ");
 			tmp_stmt.append(query->FromList[i].tb_name);
 		}
+		if((query->cond_count!=0)||(query->join_count!=0))
+			tmp_stmt += " WHERE ";
 		string cond_stmt = spliceCondStmt(query->cond_count,query->CondList);
-		if(cond_stmt != "")
+		if(cond_stmt != ""){
 			tmp_stmt.append(cond_stmt);
+			if(query->join_count!=0)
+				tmp_stmt += " AND ";
+		}
+		string join_stmt = spliceJoinStmt(query->join_count,query->JoinList);
+		if(join_stmt != ""){
+			tmp_stmt.append(join_stmt);
+		}
 		tmp_stmt.append(";");
 		cout<<tmp_stmt<<endl;
 		return tmp_stmt;
+}
+
+string spliceInsertStmt(){
+	cout<<"spliceInsertStmt"<<endl;
+	if(insert_count == 0)
+		return "";
+	string insert_stmt = "INSERT INTO ";
+	string tmp_tb_name = tb_name;
+	insert_stmt += tmp_tb_name;
+	insert_stmt += " VALUES (";
+	insert_stmt.append(insert_record[0]);
+	for(int i = 1; i<insert_count; i++){
+		insert_stmt += ",";
+		insert_stmt.append(insert_record[i]);
+	}
+	insert_stmt += ");";
+	cout<<"insert_stmt "<<insert_stmt<<endl;
+	return insert_stmt;
 }

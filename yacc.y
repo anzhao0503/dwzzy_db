@@ -1,7 +1,6 @@
 %{
 #include <string.h>
 #include "../include/parser.h"
-#include "../include/BST.h"
 extern "C"{
 	extern int yylex(void);
 	extern int lex_init();
@@ -12,8 +11,6 @@ extern "C"{
  */
 int PrintSelectQuery();
 int PrintAttrList();
-int Printdmy();
-int Printdmy();
 int PrintCondList();
 void PrintSpace(int n);
 void PrintTree();
@@ -32,7 +29,7 @@ static char errmsg[4096];
 OP Operator(char* opstr);
 TYPE GetType(char* type_str);
 static char recordstr[4096];
-TableManagement* table_manager;
+//TableManagement* table_manager;
 
 /*
 	variables
@@ -224,10 +221,10 @@ table_drop:
 insert_stat:
 		INSERT INTO table VALUES '(' insert_list ')' ';'
 		{
-			int tb_id = table_manager->GetTableId(tb_name);
-			vector<int> cols;
-			table_manager->Insert(tb_id, cols, insert_record);
-			cout << "INSERT INTO " << tb_name << " " << recordstr <<endl;
+			for(int i = 0; i<insert_count;i++){
+				cout<<"insert_record: "<< insert_record[i]<<endl;
+			}
+			exec_insert_stmt();
 		}
 	; 	
 insert_list:
@@ -350,6 +347,8 @@ select_seg:
 		select_clause FROM fromlist where_clause orderby_clause
 		{
 			FillSelectCond();
+			//select_tree();
+			//select_tree();
 			exec_select_stmt();			
 		}
 	;
@@ -400,6 +399,7 @@ sellist:
 sel_column:
 		NAME
 		{
+			cout << "$1"<<endl;
 			SaveSelItem(NULL,$1);
 		}
 	|	NAME '.' NAME
@@ -413,7 +413,7 @@ fromlist:
 	;
 sel_table:
 		NAME
-		{	
+		{	cout<<"from "<<$1<<endl;
 			SaveFromItem($1);
 			
 		}
@@ -473,7 +473,7 @@ orderlist:
 void parser_init()
 {
 	lex_init();
-	tb_name = NULL;
+	tb_name = "";
 	funcRnt = 0;
 	curPos = 0;
 
@@ -608,34 +608,6 @@ int PrintCondList(){
 			cout << " op " << query->CondList[i].op << endl;
 			cout<<"\t"<<cond_list[i].col_name<<" op "<<cond_list[i].op<<" "<< cond_list[i].value<<endl;		
 	}
-}
-void print_select(char* tbl, vector<char*> cols, vector<OP> ops, char** keys){
-  cout<<"σ "<<tbl<<" ";
-  for_each(cols.begin(),cols.end(),print_order);
-  for_each(ops.begin(),ops.end(),print_order_int);
-  for(int i=0; i< 10;i++){
-    if(keys[i] != NULL){
-      cout<<keys[i]<<" ";
-    }
-    else
-      break;
-  }
-  cout<<endl;
-}
-void print_project(char* tbl, vector<char*> cols){
-  cout <<"π "<<tbl<<" ";
-  for_each(cols.begin(),cols.end(),print_order);
-  cout<<endl;
-}
-void print_join(char* tb1, char* tb2, vector<char*> cols1, vector<char*> cols2, vector<OP> ops){
-  cout <<"⋈ " << tb1 << " "<<tb2<<" ";
-  for_each(cols1.begin(),cols1.end(),print_order);
-  for_each(cols2.begin(),cols2.end(),print_order);
-  for_each(ops.begin(),ops.end(),print_order_int);
-  cout<<endl;
-}
-void print_kashi(char* tb1, char* tb2){
-  cout << "x " << tb1<<" "<<tb2<<endl;
 }
 
 int PrintSelectQuery(){

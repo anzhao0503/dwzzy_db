@@ -66,7 +66,6 @@
 
 #include <string.h>
 #include "../include/parser.h"
-#include "../include/BST.h"
 extern "C"{
 	extern int yylex(void);
 	extern int lex_init();
@@ -77,8 +76,6 @@ extern "C"{
  */
 int PrintSelectQuery();
 int PrintAttrList();
-int Printdmy();
-int Printdmy();
 int PrintCondList();
 void PrintSpace(int n);
 void PrintTree();
@@ -97,7 +94,7 @@ static char errmsg[4096];
 OP Operator(char* opstr);
 TYPE GetType(char* type_str);
 static char recordstr[4096];
-TableManagement* table_manager;
+//TableManagement* table_manager;
 
 /*
 	variables
@@ -141,7 +138,7 @@ int curPos = 0;
 int funcRnt;
 
 
-#line 145 "yacc.tab.c" /* yacc.c:339  */
+#line 142 "yacc.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -218,12 +215,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 80 "yacc.y" /* yacc.c:355  */
+#line 77 "yacc.y" /* yacc.c:355  */
 
 	int intval;
 	char* strval;
 
-#line 227 "yacc.tab.c" /* yacc.c:355  */
+#line 224 "yacc.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -240,7 +237,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 244 "yacc.tab.c" /* yacc.c:358  */
+#line 241 "yacc.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -541,11 +538,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   110,   110,   123,   129,   133,   134,   135,   136,   137,
-     138,   139,   143,   153,   162,   170,   171,   174,   181,   187,
-     192,   197,   203,   209,   217,   225,   234,   242,   250,   262,
-     277,   289,   291,   294,   311,   329,   345,   350,   357,   362,
-     369,   376,   380,   385,   390,   397,   398,   401,   405,   411,
+       0,   107,   107,   120,   126,   130,   131,   132,   133,   134,
+     135,   136,   140,   150,   159,   167,   168,   171,   178,   184,
+     189,   194,   200,   206,   214,   222,   231,   239,   247,   259,
+     274,   286,   288,   291,   308,   326,   342,   347,   356,   361,
+     368,   375,   379,   384,   389,   396,   397,   400,   405,   411,
      412,   415,   421,   425,   430,   432,   435,   436,   439,   443,
      447,   451,   455,   460,   462,   465,   469
 };
@@ -1405,7 +1402,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 111 "yacc.y" /* yacc.c:1646  */
+#line 108 "yacc.y" /* yacc.c:1646  */
     {
 			if(funcRnt == 0)
 			{
@@ -1418,140 +1415,140 @@ yyreduce:
 			}
 			return 0;
 		}
-#line 1422 "yacc.tab.c" /* yacc.c:1646  */
+#line 1419 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 124 "yacc.y" /* yacc.c:1646  */
+#line 121 "yacc.y" /* yacc.c:1646  */
     {
 			cout<<"Should Flush Table Here.\n"<<endl;
 		}
-#line 1430 "yacc.tab.c" /* yacc.c:1646  */
+#line 1427 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 130 "yacc.y" /* yacc.c:1646  */
+#line 127 "yacc.y" /* yacc.c:1646  */
     {
 			funcRnt = 100;
 		}
-#line 1438 "yacc.tab.c" /* yacc.c:1646  */
+#line 1435 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 144 "yacc.y" /* yacc.c:1646  */
+#line 141 "yacc.y" /* yacc.c:1646  */
     {
 			tb_name = (yyvsp[-1].strval);
 			cout<<"LOAD " << (yyvsp[-3].strval) <<" INTO "<<(yyvsp[-1].strval)<<" "<<endl;
 			string tmp_name(tb_name);
 			load_data(tmp_name);
 		}
-#line 1449 "yacc.tab.c" /* yacc.c:1646  */
+#line 1446 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 154 "yacc.y" /* yacc.c:1646  */
+#line 151 "yacc.y" /* yacc.c:1646  */
     {
 			cout<<"Create Table "<< tb_name << endl;
 			PrintAttrList();
 			exec_create_stmt();	
 		}
-#line 1459 "yacc.tab.c" /* yacc.c:1646  */
+#line 1456 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 163 "yacc.y" /* yacc.c:1646  */
+#line 160 "yacc.y" /* yacc.c:1646  */
     {
 			tb_name = (yyvsp[0].strval);
 			attr_list[attr_count].table_name = (yyvsp[0].strval);
 			//printf("tb_name %s \n",tb_name);
 		}
-#line 1469 "yacc.tab.c" /* yacc.c:1646  */
+#line 1466 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 175 "yacc.y" /* yacc.c:1646  */
+#line 172 "yacc.y" /* yacc.c:1646  */
     {
 			attr_count++;
 			
 		}
-#line 1478 "yacc.tab.c" /* yacc.c:1646  */
+#line 1475 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 182 "yacc.y" /* yacc.c:1646  */
+#line 179 "yacc.y" /* yacc.c:1646  */
     {
 			attr_list[attr_count].attr_name = (yyvsp[0].strval);
 		}
-#line 1486 "yacc.tab.c" /* yacc.c:1646  */
+#line 1483 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 188 "yacc.y" /* yacc.c:1646  */
+#line 185 "yacc.y" /* yacc.c:1646  */
     {
 			attr_list[attr_count].type = C;
 			attr_list[attr_count].used_size = (int)atoi((yyvsp[-1].strval));
 		}
-#line 1495 "yacc.tab.c" /* yacc.c:1646  */
+#line 1492 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 193 "yacc.y" /* yacc.c:1646  */
+#line 190 "yacc.y" /* yacc.c:1646  */
     {
 			attr_list[attr_count].type= I;
 			attr_list[attr_count].used_size = MAX_INT_ASCII_LENGTH;
 		}
-#line 1504 "yacc.tab.c" /* yacc.c:1646  */
+#line 1501 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 198 "yacc.y" /* yacc.c:1646  */
+#line 195 "yacc.y" /* yacc.c:1646  */
     {
 			attr_list[attr_count].type= D;
 			attr_list[attr_count].used_size = MAX_DATE_ASCII_LENGTH;
 		}
-#line 1513 "yacc.tab.c" /* yacc.c:1646  */
+#line 1510 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 204 "yacc.y" /* yacc.c:1646  */
+#line 201 "yacc.y" /* yacc.c:1646  */
     {
 			attr_list[attr_count].type= V;
 			attr_list[attr_count].used_size = (int)atoi((yyvsp[-1].strval));
 		}
-#line 1522 "yacc.tab.c" /* yacc.c:1646  */
+#line 1519 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 210 "yacc.y" /* yacc.c:1646  */
+#line 207 "yacc.y" /* yacc.c:1646  */
     {
 			attr_list[attr_count].type= F;
 			attr_list[attr_count].used_size = (int)atoi((yyvsp[-1].strval));
 		}
-#line 1531 "yacc.tab.c" /* yacc.c:1646  */
+#line 1528 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 218 "yacc.y" /* yacc.c:1646  */
+#line 215 "yacc.y" /* yacc.c:1646  */
     {
 			cout<<"DROP TABLE"<< tb_name << endl;
 			exec_drop_table_stmt();
 		}
-#line 1540 "yacc.tab.c" /* yacc.c:1646  */
+#line 1537 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 226 "yacc.y" /* yacc.c:1646  */
+#line 223 "yacc.y" /* yacc.c:1646  */
     {
-			int tb_id = table_manager->GetTableId(tb_name);
-			vector<int> cols;
-			table_manager->Insert(tb_id, cols, insert_record);
-			cout << "INSERT INTO " << tb_name << " " << recordstr <<endl;
+			for(int i = 0; i<insert_count;i++){
+				cout<<"insert_record: "<< insert_record[i]<<endl;
+			}
+			exec_insert_stmt();
 		}
-#line 1551 "yacc.tab.c" /* yacc.c:1646  */
+#line 1548 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 235 "yacc.y" /* yacc.c:1646  */
+#line 232 "yacc.y" /* yacc.c:1646  */
     {
 			insert_record[insert_count] = (char*)malloc(sizeof(int)*MAX_INT_ASCII_LENGTH);
 			memcpy(insert_record[insert_count],(yyvsp[0].strval), MAX_INT_ASCII_LENGTH);
@@ -1559,11 +1556,11 @@ yyreduce:
 			strcpy(recordstr+curPos, (yyvsp[0].strval));
 			curPos+=strlen((yyvsp[0].strval));
 		}
-#line 1563 "yacc.tab.c" /* yacc.c:1646  */
+#line 1560 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 243 "yacc.y" /* yacc.c:1646  */
+#line 240 "yacc.y" /* yacc.c:1646  */
     {
 			insert_record[insert_count] = (char*)malloc(256);
 			memcpy(insert_record[insert_count],(yyvsp[0].strval), 256);
@@ -1571,11 +1568,11 @@ yyreduce:
 			strcpy(recordstr+curPos, (yyvsp[0].strval));
 			curPos+=strlen((yyvsp[0].strval));
 		}
-#line 1575 "yacc.tab.c" /* yacc.c:1646  */
+#line 1572 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 251 "yacc.y" /* yacc.c:1646  */
+#line 248 "yacc.y" /* yacc.c:1646  */
     {
 			insert_record[insert_count] = (char*)malloc(sizeof(int)*MAX_INT_ASCII_LENGTH);
 			memcpy(insert_record[insert_count],(yyvsp[0].strval), MAX_INT_ASCII_LENGTH);
@@ -1587,11 +1584,11 @@ yyreduce:
 			strcpy(recordstr+curPos, (yyvsp[0].strval));
 			curPos += strlen((yyvsp[0].strval));
 		}
-#line 1591 "yacc.tab.c" /* yacc.c:1646  */
+#line 1588 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 263 "yacc.y" /* yacc.c:1646  */
+#line 260 "yacc.y" /* yacc.c:1646  */
     {
 			insert_record[insert_count] = (char*)malloc(256);
 			memcpy(insert_record[insert_count],(yyvsp[0].strval),256);
@@ -1603,11 +1600,11 @@ yyreduce:
 			strcpy(recordstr+curPos, (yyvsp[0].strval));
 			curPos += strlen((yyvsp[0].strval));
 		}
-#line 1607 "yacc.tab.c" /* yacc.c:1646  */
+#line 1604 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 278 "yacc.y" /* yacc.c:1646  */
+#line 275 "yacc.y" /* yacc.c:1646  */
     {
 			cout<<"Update";
 			update_query->tb_name = (yyvsp[-4].strval);
@@ -1616,11 +1613,11 @@ yyreduce:
 			cout<<"Update Cond:"<<endl;
 			exec_update_stmt();
 		}
-#line 1620 "yacc.tab.c" /* yacc.c:1646  */
+#line 1617 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 295 "yacc.y" /* yacc.c:1646  */
+#line 292 "yacc.y" /* yacc.c:1646  */
     {
 			if(strcmp("=",(yyvsp[-1].strval))==0){
 			cout << "string comp"<<endl;
@@ -1637,11 +1634,11 @@ yyreduce:
 			}
 			
 		}
-#line 1641 "yacc.tab.c" /* yacc.c:1646  */
+#line 1638 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 312 "yacc.y" /* yacc.c:1646  */
+#line 309 "yacc.y" /* yacc.c:1646  */
     {
 			if(strcmp("=",(yyvsp[-1].strval))==0){
 			cout << "comp"<<endl;
@@ -1656,11 +1653,11 @@ yyreduce:
 				cout<<"syntax error"<<endl;
 			}
 		}
-#line 1660 "yacc.tab.c" /* yacc.c:1646  */
+#line 1657 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 330 "yacc.y" /* yacc.c:1646  */
+#line 327 "yacc.y" /* yacc.c:1646  */
     {
 			cout << "DELETE FROM\n"<<endl;
 			delete_query->tb_name = tb_name;
@@ -1671,90 +1668,93 @@ yyreduce:
 			exec_delete_stmt();
 			
 		}
-#line 1675 "yacc.tab.c" /* yacc.c:1646  */
+#line 1672 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 346 "yacc.y" /* yacc.c:1646  */
+#line 343 "yacc.y" /* yacc.c:1646  */
     {
 		}
-#line 1682 "yacc.tab.c" /* yacc.c:1646  */
+#line 1679 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 351 "yacc.y" /* yacc.c:1646  */
+#line 348 "yacc.y" /* yacc.c:1646  */
     {
 			FillSelectCond();
+			//select_tree();
+			//select_tree();
 			exec_select_stmt();			
 		}
-#line 1691 "yacc.tab.c" /* yacc.c:1646  */
+#line 1690 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 358 "yacc.y" /* yacc.c:1646  */
+#line 357 "yacc.y" /* yacc.c:1646  */
     {
 			query->all = 0;
 			cout<<"all "<<query->all<<endl;
 		}
-#line 1700 "yacc.tab.c" /* yacc.c:1646  */
+#line 1699 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 363 "yacc.y" /* yacc.c:1646  */
+#line 362 "yacc.y" /* yacc.c:1646  */
     {
 			query->all = 1;
 			cout<<"all "<<query->all<<endl;
 		}
-#line 1709 "yacc.tab.c" /* yacc.c:1646  */
+#line 1708 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 370 "yacc.y" /* yacc.c:1646  */
+#line 369 "yacc.y" /* yacc.c:1646  */
     {
 			printf("-----one sub selection begin----\n");
 		}
-#line 1717 "yacc.tab.c" /* yacc.c:1646  */
+#line 1716 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 376 "yacc.y" /* yacc.c:1646  */
+#line 375 "yacc.y" /* yacc.c:1646  */
     {
 			query->distinct = 0;
 			cout<<"distinct "<<query->distinct<<endl;
 		}
-#line 1726 "yacc.tab.c" /* yacc.c:1646  */
+#line 1725 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 381 "yacc.y" /* yacc.c:1646  */
+#line 380 "yacc.y" /* yacc.c:1646  */
     {
 			query->all = 1;
 			cout<<"all "<<query->distinct<<endl;
 		}
-#line 1735 "yacc.tab.c" /* yacc.c:1646  */
+#line 1734 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 386 "yacc.y" /* yacc.c:1646  */
+#line 385 "yacc.y" /* yacc.c:1646  */
     {
 			query->distinct = 1;
 			cout<<"distinct "<<query->distinct<<endl;
 		}
-#line 1744 "yacc.tab.c" /* yacc.c:1646  */
+#line 1743 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 391 "yacc.y" /* yacc.c:1646  */
+#line 390 "yacc.y" /* yacc.c:1646  */
     {
 			query->distinct = 1;
 			cout<<"distinct "<<query->distinct<<endl;
 		}
-#line 1753 "yacc.tab.c" /* yacc.c:1646  */
+#line 1752 "yacc.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 402 "yacc.y" /* yacc.c:1646  */
+#line 401 "yacc.y" /* yacc.c:1646  */
     {
+			cout << "$1"<<endl;
 			SaveSelItem(NULL,(yyvsp[0].strval));
 		}
 #line 1761 "yacc.tab.c" /* yacc.c:1646  */
@@ -1770,7 +1770,7 @@ yyreduce:
 
   case 51:
 #line 416 "yacc.y" /* yacc.c:1646  */
-    {	
+    {	cout<<"from "<<(yyvsp[0].strval)<<endl;
 			SaveFromItem((yyvsp[0].strval));
 			
 		}
@@ -2076,7 +2076,7 @@ yyreturn:
 void parser_init()
 {
 	lex_init();
-	tb_name = NULL;
+	tb_name = "";
 	funcRnt = 0;
 	curPos = 0;
 
@@ -2211,34 +2211,6 @@ int PrintCondList(){
 			cout << " op " << query->CondList[i].op << endl;
 			cout<<"\t"<<cond_list[i].col_name<<" op "<<cond_list[i].op<<" "<< cond_list[i].value<<endl;		
 	}
-}
-void print_select(char* tbl, vector<char*> cols, vector<OP> ops, char** keys){
-  cout<<"σ "<<tbl<<" ";
-  for_each(cols.begin(),cols.end(),print_order);
-  for_each(ops.begin(),ops.end(),print_order_int);
-  for(int i=0; i< 10;i++){
-    if(keys[i] != NULL){
-      cout<<keys[i]<<" ";
-    }
-    else
-      break;
-  }
-  cout<<endl;
-}
-void print_project(char* tbl, vector<char*> cols){
-  cout <<"π "<<tbl<<" ";
-  for_each(cols.begin(),cols.end(),print_order);
-  cout<<endl;
-}
-void print_join(char* tb1, char* tb2, vector<char*> cols1, vector<char*> cols2, vector<OP> ops){
-  cout <<"⋈ " << tb1 << " "<<tb2<<" ";
-  for_each(cols1.begin(),cols1.end(),print_order);
-  for_each(cols2.begin(),cols2.end(),print_order);
-  for_each(ops.begin(),ops.end(),print_order_int);
-  cout<<endl;
-}
-void print_kashi(char* tb1, char* tb2){
-  cout << "x " << tb1<<" "<<tb2<<endl;
 }
 
 int PrintSelectQuery(){

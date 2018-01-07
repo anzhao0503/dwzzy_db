@@ -15,6 +15,8 @@
 #include <string.h>
 #include "../include/table.h"
 #include "../include/metadatamanager.h"
+#include "../include/select_tree.h"
+#include "../include/logger.h"
 using namespace std;
 
 /*
@@ -122,6 +124,9 @@ extern TableManagement* table_manager;
 extern int cond_count;
 extern Condition cond_list[MAX_COND_NUM];
 
+extern char* insert_record[MAX_TUPLE_SIZE];
+extern int insert_count;
+
 int load_data(string tb_name);
 void exec_select_stmt();
 void exec_create_stmt();
@@ -129,12 +134,14 @@ void exec_drop_table_stmt();
 void exec_show_table_stmt();
 void exec_delete_stmt();
 void exec_update_stmt();
+void exec_insert_stmt();
 
 string spliceUpdateStmt();
 string spliceDeleteStmt();
 string spliceSelectStmt();
 string spliceCreateStmt();
 string spliceDropStmt();
+string spliceInsertStmt();
 
 bool insertIntoTableMeta();
 bool deleteFromMeta(string tb_name);
